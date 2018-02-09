@@ -1,0 +1,25 @@
+DSGUI--DSListWidget
+{
+	background:#e5e9ee;
+	color: #4a515a;
+	border: 1px solid #89a0b7;
+	border-radius: 2px;
+	font-size: 12px;
+}
+
+DSGUI--DSListWidget::item
+{
+	height:24px;
+	border:none;
+	color: #4a515a;
+}
+DSGUI--DSListWidget::item:hover
+{
+	background:#ced5df;
+    color:#232629;
+}
+DSGUI--DSListWidget::item:selected
+{
+    color: #232629;
+	background:#c5cdd9;
+} 

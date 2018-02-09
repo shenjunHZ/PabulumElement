@@ -1,0 +1,68 @@
+DSGUI--DSDateTimeEdit
+{
+	min-height:210;
+	max-height:210;
+	padding-left:8px;
+}
+DSGUI--DSTimeEdit
+{
+	min-height:210;
+	max-height:210;
+}
+DSGUI--DSDateTimeEdit[calendarPopup="true"]
+{
+	min-height:24px;
+	max-height:24px;
+	border : none;
+	background-color:#e5e9ee;
+	color:#4a515a;
+	padding-left:8px;
+	padding-right:15px;
+}
+DSGUI--DSDateTimeEdit[calendarPopup="true"]:hover
+{
+	border : 1px solid #89a0b7;
+    background-color : red; 
+	color:#232629;
+}
+DSGUI--DSDateTimeEdit[calendarPopup="true"]:focus
+{
+	border : 1px solid #89a0b7;
+    background-color : #ced5df; 
+	color:#232629;
+}
+DSGUI--DSDateTimeEdit[calendarPopup="true"]:disabled
+{
+	border : none;
+	background-color:#adb7c2;
+	color:#7e8690;
+}
+DSGUI--DSDateTimeEdit[calendarPopup="true"]::down-arrow
+{
+    image: url(./Skin/White/DSGui/DateTimeEdit/Calendar-n.png) ;
+    width: 20px;
+    height: 20px;
+}
+
+DSGUI--DSDateTimeEdit[calendarPopup="true"]::drop-down
+{
+    subcontrol-origin: padding;
+    subcontrol-position: center right;
+    width: 12px;
+    border-left-style: solid;
+	padding-right:5px;
+}
+
+DSGUI--DSDateTimeEdit[calendarPopup="true"]::down-arrow
+{
+    subcontrol-origin: content;
+    subcontrol-position: center;
+    position: relative;
+}
+
+DSGUI--DSDateTimeEdit[calendarPopup="true"]::down-arrow:on
+{
+    position: relative;
+    top: 1px;
+    left: 2px;
+}

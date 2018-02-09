@@ -1,0 +1,62 @@
+DSGUI--DSTableView
+{ 
+    color: #4a515a;
+	background-color: #e5e9ee;
+	border:none;
+	font: 12px;
+    qproperty-alternatingRowColors:true;
+	alternate-background-color: #d9dee4;
+}
+
+DSGUI--DSTableView::item
+{
+	height: 30px;
+	padding: 0px 4px 0px 6px;
+	background-color: transparent;
+	border-right:1px solid #a7b3c2;
+}
+
+DSGUI--DSTableView::branch
+{ 
+	image:none;
+	background-color: transparent; 
+}
+
+DSGUI--DSTableView::item:selected, 
+DSGUI--DSTableView::branch:selected,
+DSGUI--DSTableView::item:alternate:selected,
+DSGUI--DSTableView::item:!alternate:selected
+{
+    background-color:#bbc2cd;	
+    color:#232629;
+}
+
+DSGUI--DSTableView::item:hover, 
+DSGUI--DSTableView::branch:hover,
+DSGUI--DSTableView::item:alternate:hover,
+DSGUI--DSTableView::item:!alternate:hover
+{
+	/*不写hover事件无法触发*/
+	background-color:#ccd3db;	
+    color:#232629;
+}
+
+DSGUI--DSTableView::item:alternate
+{
+	background-color: #d9dee4;
+	color:#7e8690;
+}
+ 
+DSGUI--DSTableView::item:!alternate
+{
+	background-color: #e5e9ee;
+	color:#7e8690;
+}
+
+DSGUI--DSTableView::indicator
+{
+	width:12px;
+    height:12px;
+}
+
+

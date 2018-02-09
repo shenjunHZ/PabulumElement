@@ -1,0 +1,30 @@
+DSGUI--DSPushButton,
+DSGUI--DSPushButton:focus
+{
+	width:70px;
+	height:24px;
+	border-image: url(./Skin/White/DSGui/Button/btn-n.png) 2 2 2 2;
+	border-width: 2px 2px 2px 2px;
+	color: #ffffff;
+    outline: none;
+	font-size:12px;
+}
+DSGUI--DSPushButton:hover
+{
+	border-image: url(./Skin/White/DSGui/Button/btn-h.png) 2 2 2 2;
+	border-width: 2px 2px 2px 2px;
+    outline: none;   
+}
+DSGUI--DSPushButton:pressed
+{
+	border-image: url(./Skin/White/DSGui/Button/btn-p.png) 2 2 2 2;
+	border-width: 2px 2px 2px 2px;
+    outline: none;
+}
+DSGUI--DSPushButton:disabled
+{
+	border-image: url(./Skin/White/DSGui/Button/btn-d.png) 2 2 2 2;
+	border-width: 2px 2px 2px 2px;
+	color: #7e8690;
+    outline: none;
+}

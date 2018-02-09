@@ -1,0 +1,22 @@
+DSGUI--DSDateCalendar {	
+	background-color:#e5e9ee;
+	font:12px;
+	border : none;
+	border-radius:2px;
+	color:#4a515a;
+	background-image:url(./Skin/White/DSGui/DateTimeCalendar/Calendar-n.png);
+	background-repeat:	no-repeat;
+	background-position: center right;
+	padding-left:4px;
+}
+
+DSGUI--DSDateCalendar  DSGUI--DSCalendar{	
+	background-color:#e5e9ee;
+}
+
+DSGUI--DSDateCalendar  DSGUI--DSCalendar QStackedWidget#stkCalType{	
+	background-color:#e5e9ee;
+	border-top:solid 1px #89a0b7;
+	border-bottom:solid 1px #89a0b7;
+}
+

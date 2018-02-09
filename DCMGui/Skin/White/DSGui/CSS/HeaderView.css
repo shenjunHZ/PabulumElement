@@ -1,0 +1,40 @@
+DSGUI--DSHeaderView::section
+{
+	font: 12px;
+	color:#4a515a;
+	background: #d0d6df;
+	height: 30px;
+	padding: 0px 4px 0px 4px;
+	border-top:1px solid #a7b3c2;
+	border-right: 1px solid #a7b3c2;
+	border-bottom: 1px solid #a7b3c2;
+}
+DSGUI--DSHeaderView::section:last
+{
+	border-right:0px;
+}
+
+
+
+/* menu下拉箭头宽高为0 */
+*::menu-indicator
+{
+    width: 0px;
+    height: 0px;
+}
+
+DSGUI--DSHeaderView::item
+{
+	color:#4a515a;
+	height: 30px;
+	padding: 0px 4px 0px 10px;
+	border:1px solid #a7b3c2;
+}
+
+DSGUI--DSHeaderView::indicator
+{
+	width:12px;
+    height:12px;
+	left: -4px;
+}
+

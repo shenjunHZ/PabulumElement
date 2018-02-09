@@ -1,0 +1,36 @@
+DSGUI--DSLineEdit
+{
+	border-image:url(./Skin/White/DSGui/LineEdit/bg-n.png) 2 6 2 6;
+	border-width: 2px 6px 2px 6px;
+	color:#4a515a;
+} 
+
+DSGUI--DSLineEdit:hover
+{ 
+	border-image:url(./Skin/White/DSGui/LineEdit/bg-h.png) 2 6 2 6;
+} 
+
+DSGUI--DSLineEdit:pressed,
+DSGUI--DSLineEdit:focus
+{ 
+	border-image:url(./Skin/White/DSGui/LineEdit/bg-p.png) 2 6 2 6;
+}
+
+DSGUI--DSLineEdit:disabled
+{ 
+	border-image:url(./Skin/White/DSGui/LineEdit/bg-d.png)  2 6 2 6;
+}
+
+DSGUI--DSLineEdit[error=true]
+{ 
+	border-image:url(./Skin/White/DSGui/LineEdit/bg-e.png)  2 6 2 6;
+}
+
+QLabel#DSLineEdit--m_pHintLab
+{
+	color:red;
+	font-size:12px;
+	font-weight:bold;
+	background:transparent;
+	padding-left:0;
+} 

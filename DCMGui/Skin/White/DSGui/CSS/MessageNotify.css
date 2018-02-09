@@ -1,0 +1,59 @@
+DSMESSAGENOTIFY--DSMessageNotify
+{
+	background-image:url(./Skin/White/DSGui/MessageNotify/MessageNotifyBg.png) no-repeat center center;
+	qproperty-pixBorderImage:none;
+}
+
+DSMESSAGENOTIFY--DSMessageNotify DSGUI--DSTableView
+{
+	border:none;
+	border-image:transparent;
+	gridline-color: rgb(164, 165, 167);
+	background-color: transparent;
+    qproperty-alternatingRowColors:false;
+}
+
+DSMESSAGENOTIFY--DSMessageNotify DSGUI--DSDialogTitle
+{
+	min-height:32px;
+	max-height:32px;
+}
+
+ DSMESSAGENOTIFY--DSMessageNotify DSGUI--DSTableView::item,
+ DSMESSAGENOTIFY--DSMessageNotify DSGUI--DSTableView::item:!alternate:!selected
+ { 
+	background: transparent;
+ } 
+ DSMESSAGENOTIFY--DSMessageNotify DSGUI--DSTableView::item:selected 
+ { 
+	background:transparent;
+ } 
+ 
+
+DSMESSAGENOTIFY--DSProgressDialog QSlider::groove:horizontal {
+	height: 6px; 
+	background-color: #464a50;
+	border-radius: 3px;
+}
+DSMESSAGENOTIFY--DSProgressDialog QSlider::sub-page:horizontal {
+	background: #338eeb;
+	border-radius: 3px;
+ }
+DSMESSAGENOTIFY--DSProgressDialog QSlider::handle:horizontal {
+     width: 86px;
+	 height: 12px;
+	 margin:-3px -38px -3px -25px;
+     background-image:url(./Skin/White/DSGui/MessageNotify/trunk.png);
+	 background-position:left;
+	 background-repeat:no-repeat;
+ }
+
+ DSMESSAGENOTIFY--DSProgressDialog QLabel{
+	color:#4a515a;
+	background:transparent;
+	font-size:12px;
+}
+
+ DSMESSAGENOTIFY--DSProgressDialog QWidget#widget{
+	background:url(./Skin/White/DSGui/MessageNotify/bg.png);
+}

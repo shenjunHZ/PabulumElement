@@ -1,0 +1,43 @@
+DSGUI--DSMessageBox
+{
+	qproperty-pixWarningImage:url(./Skin/White/DSGui/MessageBox/Warning.png); 
+}
+DSGUI--DSMessageBox QLabel{
+    color:#4a515a;
+}
+DSGUI--DSMessageBox DSGUI--DSPushButton#MsgBtnOk
+{
+	width:70px;
+	height:24px;
+}
+
+DSGUI--DSMessageBox DSGUI--DSPushButton#MsgBtnCancel,
+DSGUI--DSMessageBox DSGUI--DSPushButton#MsgBtnCancel:focus
+{
+	width:70px;
+	height:24px;
+	border-image: url(./Skin/White/DSGui/Button/btn01-n.png) 2 2 2 2;
+	border-width: 2px 2px 2px 2px;
+	color: #ffffff;
+    outline: none;
+	font-size:12px;
+}
+DSGUI--DSMessageBox DSGUI--DSPushButton#MsgBtnCancel:hover
+{
+	border-image: url(./Skin/White/DSGui/Button/btn01-h.png) 2 2 2 2;
+	border-width: 2px 2px 2px 2px;
+    outline: none;   
+}
+DSGUI--DSMessageBox DSGUI--DSPushButton#MsgBtnCancel:pressed
+{
+	border-image: url(./Skin/White/DSGui/Button/btn01-p.png) 2 2 2 2;
+	border-width: 2px 2px 2px 2px;
+    outline: none;
+}
+DSGUI--DSMessageBox DSGUI--DSPushButton#MsgBtnCancel:disabled
+{
+	border-image: url(./Skin/White/DSGui/Button/btn01-d.png) 2 2 2 2;
+	border-width: 2px 2px 2px 2px;
+	color: #ecf0f4;
+    outline: none;
+}

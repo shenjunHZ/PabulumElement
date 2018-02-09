@@ -1,0 +1,78 @@
+DSGUI--DSScrollBar:horizontal 
+{
+	background:transparent;
+	border:none;
+	border-radius:1px;
+    height: 9px;
+	margin: 0 0 3px 0;
+ }
+DSGUI--DSScrollBar::handle:horizontal
+{
+    background:rgba(255,255,255,6%);
+	border:none;
+	border-radius:2px;
+	min-width:20px;
+}
+DSGUI--DSScrollBar::handle:horizontal::hover,
+DSGUI--DSScrollBar::handle:horizontal::pressed
+{
+    background:rgba(255,255,255,12%);
+}
+DSGUI--DSScrollBar::add-line:horizontal
+{
+    border-width:0px 0px 0px 0px;
+    width: 0px;
+    subcontrol-position: right;
+    subcontrol-origin: margin;
+}
+DSGUI--DSScrollBar::sub-line:horizontal
+{
+    border-width:0px 0px 0px 0px;
+    width: 0px;	
+    subcontrol-position: left;
+    subcontrol-origin: margin;
+}
+DSGUI--DSScrollBar::add-page:horizontal,
+DSGUI--DSScrollBar::sub-page:horizontal
+{
+    background: none;
+}
+
+DSGUI--DSScrollBar:vertical {
+	background:transparent;
+	border:none;
+	border-radius:1px;
+    width: 9px;
+	margin: 0 3px 0 0;
+ }
+DSGUI--DSScrollBar::handle:vertical
+{
+    background:rgba(255,255,255,6%);
+	border:none;
+	border-radius:2px;
+	min-height:20px;
+}
+DSGUI--DSScrollBar::handle:vertical::hover,
+DSGUI--DSScrollBar::handle:vertical::pressed
+{
+    background:rgba(255,255,255,12%);
+}
+DSGUI--DSScrollBar::sub-line:vertical
+{
+    border-width:0px 0px 0px 0px;
+    height: 0px;
+    subcontrol-position: top;
+    subcontrol-origin: margin;
+}
+DSGUI--DSScrollBar::add-line:vertical
+{ 
+    border-width:0px 0px 0px 0px;
+    height: 0px;
+    subcontrol-position: bottom;
+    subcontrol-origin: margin;
+}
+DSGUI--DSScrollBar::add-page:vertical,
+DSGUI--DSScrollBar::sub-page:vertical
+{
+    background: none;
+}

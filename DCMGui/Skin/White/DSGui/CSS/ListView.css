@@ -1,0 +1,27 @@
+DSGUI--DSListView
+{ 
+	color: #4a515a;
+	border: 1px solid #89a0b7;
+	border-radius: 2px;
+	background: #e5e9ee;
+	outline:none;
+} 
+
+DSGUI--DSListView::item
+{
+	color: #4a515a;
+	height: 24px;
+	border:none;
+}
+
+DSGUI--DSListView::item:selected
+{
+	background: #c5cdd9;
+	color:#232629;
+}
+
+DSGUI--DSListView::item:hover
+{
+	background: #ced5df;
+	color:#232629;
+}
