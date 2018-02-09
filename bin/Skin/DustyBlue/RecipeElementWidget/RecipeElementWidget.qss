@@ -1,0 +1,4 @@
+QPushButton#m_btnIcon
+{
+	border-image: url(skin/DustyBlue/RecipeElementWidget/appIcon.png) center center;
+}
