@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Plugins>
+  <UIPlugin id="RealPlayUI" type="0" name="">
+  </UIPlugin>
+  <UIPlugin id="PlaybackUI" type="0" name="">
+  </UIPlugin>
+  <UIPlugin id="AlarmManagerUI" type="0" name="">
+  </UIPlugin>
+  <UIPlugin id="LogSearchUI" type="0" name="">
+  </UIPlugin>
+  <UIPlugin id="TVWallUI" type="1" name="TVWallUI_D.dll">
+    <Depend id="TVWallLogical" />
+    <Depend id="DeviceLogical" />
+    <Depend id="DPSDKLogical" />
+  </UIPlugin>
+  <UIPlugin id="EmapUI" type="1" name="">
+  </UIPlugin>
+  <UIPlugin id="DeviceShowCtrlUI" type="1" name="">
+  </UIPlugin>
+  <UIPlugin id="DeviceManagerlUI" type="2" name="">
+  </UIPlugin>
+  <UIPlugin id="DeviceConfiglUI" type="2" name="">
+  </UIPlugin>
+  <UIPlugin id="AlarmConfiglUI" type="2" name="">
+  </UIPlugin>
+  <UIPlugin id="TVWallConfigUI" type="2" name="TVWallConfigUI_D.dll">
+    <Depend id="TVWallLogical" />
+    <Depend id="DeviceLogical" />
+    <Depend id="DPSDKLogical" />
+  </UIPlugin>
+  <LogicalPlugin id="TVWallLogical" name="TVWallLogical_D.dll">
+    <Depend id="DPSDKLogical" />
+  </LogicalPlugin>
+</Plugins>

@@ -1,0 +1,33 @@
+#pragma once
+
+#ifdef WIN32
+#define PLUGIN_EXPORT __declspec(dllexport)
+#else
+#define PLUGIN_EXPORT
+#endif
+
+#ifndef DECLEARATION_PLUGIN_FUNTION
+#ifndef IOS
+#define DECLEARATION_PLUGIN_FUNTION \
+	static DSPluginAPI::IPluginAPI* s_pPlugin = NULL;\
+	extern "C" PLUGIN_EXPORT DSPluginAPI::IPluginAPI* GetInstance(void);\
+	extern "C" PLUGIN_EXPORT void ReleaseInstance();
+#else
+#define DECLEARATION_PLUGIN_FUNTION
+#endif
+#endif
+
+#ifndef IMPLEMENTION_PLUGIN_FUNCTION
+#ifndef IOS
+#define IMPLEMENTION_PLUGIN_FUNCTION(PLUGINCLASS) \
+	DSPluginAPI::IPluginAPI* GetInstance(void){ \
+	if (s_pPlugin != NULL) return s_pPlugin; \
+	s_pPlugin = new(std::nothrow) PLUGINCLASS; \
+	return s_pPlugin;} \
+	\
+	void ReleaseInstance() {\
+	if (s_pPlugin != NULL) {delete s_pPlugin; s_pPlugin = NULL;}}
+#else
+#define IMPLEMENTION_PLUGIN_FUNCTION(PLUGINCLASS) 
+#endif
+#endif

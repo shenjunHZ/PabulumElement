@@ -1,0 +1,30 @@
+#ifndef __DSPLUGINAPI_IDPSDKMANAGER_H__
+#define __DSPLUGINAPI_IDPSDKMANAGER_H__
+
+#include "IAbstractResourceManager.h"
+#include "DPSDK.h"
+
+namespace DSPluginAPI
+{
+    class IDPSDKManager : public IAbstractResourceManager
+    {
+    public:
+        // 获取资源管理类ID，通过查文档标识
+        virtual std::string GetResourceID() const
+        {
+            return "DPSDK";
+        }
+
+        // 获取资源所在的插件ID
+        virtual std::string GetPluginID() const
+        {
+            return "DPSDK";
+        }
+
+    public:
+        virtual DPSdk::IDPSDKEntity* GetDPSDKEntity() const = 0;
+    };
+
+}
+
+#endif
