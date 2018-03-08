@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MaterialRepositoryWidget</class>
+ <widget class="QWidget" name="MaterialRepositoryWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>732</width>
+    <height>467</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string notr="true">5G_U8</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QPushButton" name="m_btnIcon">
+       <property name="minimumSize">
+        <size>
+         <width>160</width>
+         <height>160</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>160</width>
+         <height>160</height>
+        </size>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="DSGUI::DSToolListView" name="m_pToolListView">
+       <property name="minimumSize">
+        <size>
+         <width>160</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>160</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::StyledPanel</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="DSGUI::DSSearchEdit" name="m_pSearchWord" native="true">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>40</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>40</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QStackedWidget" name="funcStackedWidget">
+       <property name="currentIndex">
+        <number>1</number>
+       </property>
+       <widget class="mainApp::AbbreviationFunctionSearch" name="m_pSearchWidget"/>
+       <widget class="mainApp::AbbreviationFunctionAdd" name="m_pAddWidget"/>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DSGUI::DSSearchEdit</class>
+   <extends>QWidget</extends>
+   <header>SearchEdit/SearchEdit.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DSGUI::DSToolListView</class>
+   <extends>QFrame</extends>
+   <header>ToolListView/ToolListView.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>mainApp::AbbreviationFunctionSearch</class>
+   <extends>QWidget</extends>
+   <header>FunctionPage/Abbreviationfunctionsearch.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>mainApp::AbbreviationFunctionAdd</class>
+   <extends>QWidget</extends>
+   <header location="global">FunctionPage/Abbreviationfunctionadd.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

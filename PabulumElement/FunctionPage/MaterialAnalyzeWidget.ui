@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MaterialAnalyzeWidget</class>
+ <widget class="QWidget" name="MaterialAnalyzeWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>774</width>
+    <height>491</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string notr="true">RecipeElement</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>5</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>5</number>
+   </property>
+   <property name="bottomMargin">
+    <number>5</number>
+   </property>
+   <item>
+    <widget class="QStackedWidget" name="funcStackedWidget">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="mainApp::PrepareTableWidget" name="m_pPrepareTableWidget"/>
+     <widget class="mainApp::RecipeElementWidget" name="m_pRecipeElementWidget"/>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>mainApp::PrepareTableWidget</class>
+   <extends>QWidget</extends>
+   <header>PrepareTableWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>mainApp::RecipeElementWidget</class>
+   <extends>QWidget</extends>
+   <header>RecipeElementwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
