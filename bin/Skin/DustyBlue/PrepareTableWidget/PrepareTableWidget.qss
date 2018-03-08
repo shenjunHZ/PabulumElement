@@ -1,0 +1,19 @@
+/*删除标签按钮*/
+QPushButton#btnDel
+{
+	background:transparent url(skin/DustyBlue/PrepareTableWidget/table_del_n.png) no-repeat center center;
+}
+QPushButton#btnDel:hover
+{
+	background:transparent url(skin/DustyBlue/PrepareTableWidget/table_del_h.png) no-repeat center center;
+}
+
+QPushButton#btnDel:pressed
+{
+	background:transparent url(skin/DustyBlue/PrepareTableWidget/table_del_p.png) no-repeat center center;
+}
+
+QPushButton#btnDel:disabled
+{
+	background:transparent url(skin/DustyBlue/PrepareTableWidget/table_del_dis.png) no-repeat center center;
+}

@@ -1,0 +1,10 @@
+/* -----对话框部件----- */
+QDialog#QSingleMainDlg{
+	width:1024px;
+	height:768px;
+	background-color: transparent;
+}
+QWidget#QSingleMainDlgBg{	
+	background-color: #1D1F22;
+	border: 2px solid #3A3E43; 
+}

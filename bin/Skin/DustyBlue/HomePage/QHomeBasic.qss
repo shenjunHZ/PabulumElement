@@ -1,0 +1,5 @@
+QHomeBasic{
+	/*background-color: #3A3E43;*/
+	background: transparent;
+	border-radius: 5;
+}

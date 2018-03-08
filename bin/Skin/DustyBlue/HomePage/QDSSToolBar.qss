@@ -1,0 +1,183 @@
+/**
+ * 界面顶部工具条
+ */
+
+/* -----对话框部件----- */
+QDialog#QDSSToolBar{
+	background-color: #3F4348;
+}
+
+QLabel#LABEL_LOGO{
+	max-width:  100px;
+	max-height:  32px;
+	min-width:  100px;
+	min-height:	  32px;
+    background: url(skin/DustyBlue/HomePage/toolbar/toolbar-bg.png) no-repeat center center;
+}
+
+/* -----按钮部件----- */
+QPushButton#BTN_MINI,
+QPushButton#BTN_BACK2HOME,
+QPushButton#BTN_MAX,
+QPushButton#BTN_CLOSE,
+QPushButton#BTN_DROP,
+QPushButton#BTN_TOOLBAR_TOP_CLOSE,
+QPushButton#BTN_MORE,
+QPushButton#BTN_USERINFO,
+QPushButton#BTN_PCSTATUS{
+	border:none;
+	outline: none;
+	margin: 0;
+	background-position:center;
+	background-repeat: none;
+}
+
+QPushButton#BTN_MINI,
+QPushButton#BTN_BACK2HOME,
+QPushButton#BTN_MAX,
+QPushButton#BTN_CLOSE,
+QPushButton#BTN_TOOLBAR_TOP_CLOSE{
+	max-width:  16px;
+	max-height:  16px;
+	min-width:  16px;
+	min-height:	  16px;
+}
+
+QPushButton#BTN_DROP,
+QPushButton#BTN_MORE,
+QPushButton#BTN_USERINFO,
+QPushButton#BTN_PCSTATUS{
+	max-width:  20px;
+	max-height:  20px;
+	min-width:  20px;
+	min-height:	  20px;
+}
+
+/* 添加按钮 */
+QPushButton#BTN_AddPAGE{
+	border-image: url(skin/DustyBlue/HomePage/toolbar/add_normal.png) no-repeat center center;
+}
+QPushButton#BTN_AddPAGE:hover{
+	border-image: url(skin/DustyBlue/HomePage/toolbar/add_hover.png) no-repeat center center;
+}
+QPushButton#BTN_AddPAGE:pressed{
+	border-image: url(skin/DustyBlue/HomePage/toolbar/add_pressed.png) no-repeat center center;
+}
+
+/* 最小化按钮 */
+QPushButton#BTN_MINI{
+	background: url(skin/DustyBlue/HomePage/toolbar/mini-n.png) no-repeat center center;
+}
+QPushButton#BTN_MINI:hover{
+	background: url(skin/DustyBlue/HomePage/toolbar/mini-h.png) no-repeat center center;
+}
+QPushButton#BTN_MINI:pressed{
+	background: url(skin/DustyBlue/HomePage/toolbar/mini-p.png) no-repeat center center;
+}
+QPushButton#BTN_MINI:disabled{
+	background: url(skin/DustyBlue/HomePage/toolbar/mini-d.png) no-repeat center center;
+}
+
+
+/* 被拖拉出的单独的tab页面回归的按钮 */
+QPushButton#BTN_BACK2HOME{
+	background: url(skin/DustyBlue/HomePage/toolbar/back-n.png) no-repeat center center;
+}
+QPushButton#BTN_BACK2HOME:hover{
+	background: url(skin/DustyBlue/HomePage/toolbar/back-h.png) no-repeat center center;
+}
+QPushButton#BTN_BACK2HOME:pressed{
+	background: url(skin/DustyBlue/HomePage/toolbar/back-p.png) no-repeat center center;
+}
+QPushButton#BTN_BACK2HOME:disabled{
+	background: url(skin/DustyBlue/HomePage/toolbar/back-d.png) no-repeat center center;
+}
+
+/* 最大化按钮 */
+QPushButton#BTN_MAX{
+	background: url(skin/DustyBlue/HomePage/toolbar/max-n.png) no-repeat center center;
+}
+QPushButton#BTN_MAX:hover{
+	background: url(skin/DustyBlue/HomePage/toolbar/max-h.png) no-repeat center center;
+}
+QPushButton#BTN_MAX:pressed{
+	background: url(skin/DustyBlue/HomePage/toolbar/max-p.png) no-repeat center center;
+}
+QPushButton#BTN_MAX:disabled{
+	background: url(skin/DustyBlue/HomePage/toolbar/max-d.png) no-repeat center center;
+}
+
+/* 还原按钮 */
+QPushButton#BTN_REDUCTION{
+	border-image: url(skin/DustyBlue/HomePage/toolbar/medium-n.png) no-repeat center center;
+}
+QPushButton#BTN_REDUCTION:hover{
+	border-image: url(skin/DustyBlue/HomePage/toolbar/medium-h.png) no-repeat center center;
+}
+QPushButton#BTN_REDUCTION:pressed{
+	border-image: url(skin/DustyBlue/HomePage/toolbar/medium-p.png) no-repeat center center;
+}
+QPushButton#BTN_REDUCTION:disabled{
+	border-image: url(skin/DustyBlue/HomePage/toolbar/medium-d.png) no-repeat center center;
+}
+
+/* 关闭按钮 */
+QPushButton#BTN_CLOSE{
+	background: url(skin/DustyBlue/HomePage/toolbar/windowclose-n.png) no-repeat center center;
+}
+QPushButton#BTN_CLOSE:hover{
+	background: url(skin/DustyBlue/HomePage/toolbar/windowclose-h.png) no-repeat center center;
+}
+QPushButton#BTN_CLOSE:pressed{
+	background: url(skin/DustyBlue/HomePage/toolbar/windowclose-p.png) no-repeat center center;
+}
+QPushButton#BTN_CLOSE:disabled{
+	background: url(skin/DustyBlue/HomePage/toolbar/windowclose-d.png) no-repeat center center;
+}
+
+
+
+QMenu{
+	border-image: url(skin/DustyBlue/QDSSClient/public/toolbar/menu_bg.png) 12 0 0 0;
+	border-width: 12px 0px 0px 0px;
+}
+
+/* 工具条按钮右上角的小关闭按钮 */
+QPushButton#BTN_TOOLBAR_TOP_CLOSE{
+	max-width:  16px;
+	max-height:  16px;
+	min-width:  16px;
+	min-height:	  16px;
+	background: url(skin/DustyBlue/HomePage/toolbar/tabclose-h.png) no-repeat;
+}
+QPushButton#BTN_TOOLBAR_TOP_CLOSE:hover{
+	background: url(skin/DustyBlue/HomePage/toolbar/tabclose-h.png) no-repeat;
+}
+QPushButton#BTN_TOOLBAR_TOP_CLOSE:pressed{
+	background: url(skin/DustyBlue/HomePage/toolbar/tabclose-p.png) no-repeat;
+}
+QPushButton#BTN_TOOLBAR_TOP_CLOSE:disabled{
+	background: url(skin/DustyBlue/HomePage/toolbar/tabclose-d.png) no-repeat;
+}
+
+QPanelButton
+{
+	qproperty-normalFontColor:#abb2bd;
+	qproperty-selectFontColor:#ffffff;
+	qproperty-selectHoverFontColor:#ffffff;
+	qproperty-selectPressedFontColor:#ffffff;
+	qproperty-normalHoverFontColor:#ffffff;
+}
+
+DSGUI--DSMenu#m_menuDrop::icon
+{ 
+	min-width:0px;
+	max-width:0px;
+	width:0px;
+	margin:0;
+}
+DSGUI--DSMenu::item
+{
+	padding: 0px 15px 0px 15px;
+}
+

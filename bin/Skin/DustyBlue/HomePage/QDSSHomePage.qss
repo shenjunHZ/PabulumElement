@@ -1,0 +1,17 @@
+QWidget#centerWidget
+{
+	background: url(./Skin/DustyBlue/HomePage/public/bg_homepage.png) no-repeat center center;
+}
+
+DSGUI--DSTabPanel::tab:hover
+{
+	border-image:url(./Skin/DustyBlue/HomePage/public/press-bg.png) 8;
+	border-width:8px;
+}
+DSGUI--DSTabPanel::tab:focus,
+DSGUI--DSTabPanel::tab:pressed,
+{
+	border-image:url(./Skin/DustyBlue/HomePage/public/press-bg.png) 8;
+	border-width:8px;
+}
+

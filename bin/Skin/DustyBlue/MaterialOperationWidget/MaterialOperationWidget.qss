@@ -1,0 +1,12 @@
+QPushButton#m_btnIcon
+{
+	border-image: url(skin/DustyBlue/MaterialOperationWidget/appIcon.png) center center;
+}
+
+
+DSGUI--DSSearchEdit QWidget#widgetBk
+{
+	border-radius:15px;
+	min-height: 100px
+	min-width:  80px;
+}
