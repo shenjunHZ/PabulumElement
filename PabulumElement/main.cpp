@@ -4,14 +4,14 @@
 @data    2018-1-22
 @version 1.0
 */
-
 #include "Tools/Dir.h"
 #include "Tools/File.h"
+#include "AppCommon/ClientApp.h"
 #include "Common/GlobalDataCenter/GlobalDataCenter.h"
 #include "MessageNotify/MessageNotify.h"
+#include "MessageBox/MessageBox.h"
 #include "DSGuiGlobalData.h"
-#include "commonControl.h"
-#include "InitAppWidget.h"
+#include "AppCommon/commonControl.h"
 #include "version.h"
 
 #include <QtWidgets/QApplication>
@@ -77,9 +77,9 @@ int main(int argc, char* argv[])
 
     // set font
     QFont chnFont("Microsoft YaHei");
-    chnFont.setPixelSize(12);
+    chnFont.setPixelSize(14);
     QFont enFont("Arial");
-    enFont.setPixelSize(12);
+    enFont.setPixelSize(14);
     app.setFont(chnFont);
 
     // set notify
@@ -102,14 +102,22 @@ int main(int argc, char* argv[])
     qApp->setStyleSheet(strStyle + DSGUI::DSFile::ReadAll(strFileList, strCSSFilePath));
 
     // to do uniqueness
+    if (theApp.isRunning())
+    {
+        DSGUI::DSMessageBox::ShowInformation(NULL, QObject::tr("Notice"), QObject::tr("Application had runned!"), DSGUI::DSMessageBox::Ok);
+        return 0;
+    }
 
-    mainApp::InitAppWidget w;
-    w.show();
+    if (theApp.initInstance())
+    {
+        //mainApp::InitAppWidget w;
+        //w.show();
+        app.exec();
+    }
+    theApp.releaseShareMemory();
 
-    return app.exec();
+    return theApp.exitInstance();
 }
-
-
 
 void SetTranslator(const QString strPath)
 {
@@ -118,7 +126,7 @@ void SetTranslator(const QString strPath)
         return;
     }
     QTranslator * pTrans = new QTranslator();
-    if (pTrans->load(strPath))	// 如果加载成功
+    if (pTrans->load(strPath))	
     {
         QApplication::installTranslator(pTrans);
     }
@@ -137,8 +145,8 @@ void SearchQmFile(const QString & strPath)
         return;
     }
     dir.setFilter(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
-    dir.setSorting(QDir::DirsFirst);	// 文件夹优先
-                                        // 转换成一个List
+    dir.setSorting(QDir::DirsFirst);	
+                                        
     QFileInfoList list = dir.entryInfoList();
     if (list.size() < 1)
     {

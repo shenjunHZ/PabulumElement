@@ -11,17 +11,17 @@
 #define _DSGUI_PIXMAPBROWSER_H
 
 #include "DSGuiGlobal.h"
-#include <QtGui/QGraphicsView>
+#include <QtWidgets/QGraphicsView>
 
 namespace DSGUI
 {
     class DSGraphicsLayout;
-	class DS_GUI_EXPORT DSPictureBrowser : public QGraphicsView
-	{
-		Q_OBJECT
+    class DS_GUI_EXPORT DSPictureBrowser : public QGraphicsView
+    {
+        Q_OBJECT
 
-	public:
-		// 构造
+    public:
+        // 构造
         DSPictureBrowser(QWidget* pParent = NULL);
 
     public:
@@ -41,8 +41,8 @@ namespace DSGUI
         void SignalClickedItem(QGraphicsItem* pItem);
         // 双击信号
         void SignalDoubleClickedItem(QGraphicsItem* pItem);
-		// 单击信号
-		void SignalPressItem(QGraphicsItem* pItem);
+        // 单击信号
+        void SignalPressItem(QGraphicsItem* pItem);
 
     protected:
         // 大小改变事件
@@ -51,15 +51,15 @@ namespace DSGUI
         virtual void mouseReleaseEvent(QMouseEvent* pMouseEvent);
         // 鼠标双击事件
         virtual void mouseDoubleClickEvent(QMouseEvent* pMouseEvent);
-		// 鼠标单击事件
-		virtual void mousePressEvent(QMouseEvent* pMouseEvent);
+        // 鼠标单击事件
+        virtual void mousePressEvent(QMouseEvent* pMouseEvent);
     private slots:
         // 选中改变
         void OnSelectionChanged();
 
     private:
         DSGraphicsLayout* m_pGraphicsItemLayout; // 场景布局
-	};
+    };
 }
 
 #endif //_DSGUI_LISTVIEW_H

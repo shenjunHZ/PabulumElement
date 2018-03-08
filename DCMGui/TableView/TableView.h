@@ -14,16 +14,16 @@
 
 namespace DSGUI
 {
-	class DS_GUI_EXPORT DSTableView : public DSBaseView
-	{
-		Q_OBJECT
-	public:
-		DSTableView(QWidget* pParent = NULL);
+    class DS_GUI_EXPORT DSTableView : public DSBaseView
+    {
+        Q_OBJECT
+    public:
+        DSTableView(QWidget* pParent = NULL);
 
-	protected:
+    protected:
         // 当编辑可用时，鼠标单击会触发双击效果
-		virtual bool edit(const QModelIndex& miIndex, EditTrigger enumTrigger, QEvent* pEvent);
-	};
+        virtual bool edit(const QModelIndex& miIndex, EditTrigger enumTrigger, QEvent* pEvent);
+    };
 
 }
 
