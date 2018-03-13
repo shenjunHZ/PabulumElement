@@ -29,11 +29,11 @@ namespace mainApp
     void ListWidgetItemRightAction::initUi()
     {
         m_pActDelete = m_pMenu->addAction(QObject::tr("Delete Definition  "));
-        m_pActDelete->setIcon(QIcon("./skin/DustyBlue/AbbreviationApplication/del-p.png"));
+        m_pActDelete->setIcon(QIcon("./Skin/DustyBlue/MaterialOperationWidget/del-p.png"));
         m_pActDelete->setData(g_iItemActionDelete);
 
         m_pActUpdate = m_pMenu->addAction(QObject::tr("Edit Definition  "));
-        m_pActUpdate->setIcon(QIcon("./skin/DustyBlue/AbbreviationApplication/edit-p.png"));
+        m_pActUpdate->setIcon(QIcon("./Skin/DustyBlue/MaterialOperationWidget/edit-p.png"));
         m_pActUpdate->setData(g_iItemActionEdit);
     }
 

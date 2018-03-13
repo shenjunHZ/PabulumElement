@@ -1,3 +1,10 @@
+/*
+@function    define
+@author  sj
+@data    2018-3-9
+@version 1.0
+*/
+
 #ifndef VIEW_DEFINE_H
 #define VIEW_DEFINE_H
 
@@ -10,8 +17,8 @@
 
 // height for toolbar
 #define TOOLBAR_HEIGHT 50
-#define TOOLBAR_BORDER 0                          // button与顶的间距
-#define TOOLBAR_BTN_HEIGHT (TOOLBAR_HEIGHT-2*TOOLBAR_BORDER)      // button高度
+#define TOOLBAR_BORDER 0                          
+#define TOOLBAR_BTN_HEIGHT (TOOLBAR_HEIGHT-2*TOOLBAR_BORDER)
 
 // add button
 #define BTN_AddPAGE_WIDTH 24
@@ -30,10 +37,6 @@
 #define PANNELBORDER_RIGHT 35
 #define PANNELBORDER_BOTTOM 35
 
-#define WM_ASKQUIT 100
-#define WM_TASKBAR_ANIMATION 101
-#define WM_TASKBAR_INIT 102
-#define  WM_VIDEO_REFRESH 103
 
 //#define MAX_REAL_MONITOR_NUM	4
 #define Q_DELETE(T)  if(T != NULL) {  delete T; T = NULL;}
@@ -91,5 +94,24 @@
             strDefinition = "";
         }
     }AbbreviationInfo_s;
+
+    struct ReferenceTarget
+    {
+        QString strUnit;      // mg
+        double     iRetainPlace; // 0.1
+        //float   fReferenceValue; // 60 g
+        double   fLimitValue;    // 0.5 mg
+    };
+    typedef std::map<QString, ReferenceTarget> RecipeReferenceTargetTable;
+    typedef std::map<QString, float> NRVReferenceValueTable;
+
+    template<class T>
+    struct DisableCompare : public std::binary_function<T, T, bool>
+    {
+        bool operator()(T lhs, T rhs)  const
+        {
+            return true;
+        }
+    };
 
 #endif

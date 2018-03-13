@@ -1,6 +1,8 @@
 #include "ExecFileOperation.h"
 
 #include <MessageNotify/MessageNotify.h>
+#include <QtCore/QFileInfo>
+#include <Ole2.h>
 
 const int g_iWorkSheetIndex = 1;
 
@@ -14,13 +16,16 @@ namespace mainApp
         m_pWorkBook(nullptr),
         m_pWorkSheets(nullptr),
         m_pWorkSheet(nullptr)
+        , m_bNewFile(false)
     {
+        HRESULT result = OleInitialize(0);
         init();
     }
 
     ExecFileOperation::~ExecFileOperation()
     {
         closeExecFile();
+        OleUninitialize();
 
         m_pWorkSheet = nullptr;
         m_pWorkSheets = nullptr;
@@ -60,17 +65,68 @@ namespace mainApp
             DSGUI::DSMessageNotify::Instance().AddTextNotification(QObject::tr("Open excel filed!"));
             return false;
         }
+        QFile excelFile(m_filePathName);
+        if (!excelFile.exists())
+        {
+            m_pWorkBooks->dynamicCall("Add");
+            m_bNewFile = true;
+            m_pWorkBook = m_pAxObject->querySubObject("ActiveWorkBook");
+        }
+        else
+        {
+            //m_pWorkBooks->dynamicCall("Open (const QString&)", m_filePathName);
+            m_pWorkBook = m_pWorkBooks->querySubObject("Open (const QString&)", m_filePathName);
+            m_bNewFile = false;
 
-        QVariant var = m_pWorkBooks->dynamicCall("Open (const QString&)", m_filePathName);
-        int iVar = var.toInt();
+        }
+        if (!m_pWorkBook)
+        {
+            DSGUI::DSMessageNotify::Instance().AddTextNotification(QObject::tr("Open file filed!"));
+            return false;
+        }
         QVariant varTitle = m_pAxObject->property("Caption"); // 获取标题
         QString strTitle = varTitle.toString();
 
-        m_pWorkBook = m_pAxObject->querySubObject("ActiveWorkBook"); // 获取当前工作簿
+        //m_pWorkBook = m_pAxObject->querySubObject("ActiveWorkBook"); // 获取当前工作簿
         m_pWorkSheets = m_pWorkBook->querySubObject("Sheets"); // 获取工作表集合
         m_pWorkSheet = m_pWorkSheets->querySubObject("Item(int)", g_iWorkSheetIndex); //获取工作表集合的表1
 
         return true;
+    }
+
+    void ExecFileOperation::saveFile()
+    {
+        if (nullptr != m_pWorkBook && nullptr != m_pWorkSheet 
+            && !m_filePathName.isEmpty())
+        {
+            m_filePathName.replace("/", "\\"); // must do it
+            if (!m_bNewFile)
+            {
+                m_pWorkBook->dynamicCall("Save()");
+            }
+            else
+            {
+                //m_pWorkBook->dynamicCall("SaveAs (const QString&)", m_filePathName);
+                QVariant var = m_pWorkBook->dynamicCall("SaveAs(const QString&, int, const QString&, const QString&, bool, bool)", 
+                    m_filePathName, 56, QString(""), QString(""), false, false);
+                int iVar = var.toInt();
+                //qDebug() <<"============================" <<iVar;
+            }
+        }
+        //qDebug() << "save Done.";
+    }
+
+    void ExecFileOperation::closeExecFile()
+    {
+        if (!m_pWorkBook || !m_pAxObject)
+        {
+            return;
+        }
+        saveFile();
+
+        m_pAxObject->setProperty("DisplayAlerts", true);
+        //m_pWorkBook->dynamicCall("Close()"); // close work book
+        m_pAxObject->dynamicCall("Quit()"); // close excel
     }
 
     bool ExecFileOperation::readSheetAllData(QVariant& var)
@@ -115,17 +171,14 @@ namespace mainApp
 
     void ExecFileOperation::castListListVariant2Variant(const QList<QList<QVariant>> &cells, QVariant& var)
     {
-        var.setValue<QList<QList<QVariant>>>(cells);
-    }
-
-    void ExecFileOperation::closeExecFile()
-    {
-        if (!m_pWorkBook || !m_pAxObject)
+        //var.setValue<QList<QList<QVariant>>>(cells);
+        QVariantList vars;
+        const int rows = cells.size();
+        for (int i = 0; i < rows; ++i)
         {
-            return;
+            vars.append(QVariant(cells[i]));
         }
-        m_pWorkBook->dynamicCall("Close()"); // 关闭工作簿
-        m_pAxObject->dynamicCall("Quit()"); // 关闭excel
+        var = QVariant(vars);
     }
 
     bool ExecFileOperation::writeCurrentSheet(const QList<QList<QVariant> > &cells)

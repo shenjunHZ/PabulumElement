@@ -47,6 +47,7 @@ namespace mainApp
         void OnSaveClicked();
         void OnCancelClicked();
         void onTextChanged();
+        //void onCursorPositionChanged();
 
     private:
         Ui::AbbreviationFunctionAdd*    m_pUi;

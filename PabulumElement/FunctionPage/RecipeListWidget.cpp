@@ -46,6 +46,7 @@ namespace mainApp
     void RecipeListWidget::createRecipeList(QList<QList<QString>>& listVar)
     {
         QList<recipteData> listData;
+        m_listSortRecipe.clear();
         for (int iIndex = 1; iIndex < listVar.size(); iIndex++)
         {
             recipteData data;
@@ -65,14 +66,20 @@ namespace mainApp
             m_model->insertRow(nRow, item);
             QString strConstituent = listData[iData].strValue + " g";
 
-            m_model->setData(m_model->index(nRow, 0), listData[iData].strRecipe);   // ÅäÁÏ
-            m_model->setData(m_model->index(nRow, 1), strConstituent);              // Åä·½
+            m_model->setData(m_model->index(nRow, 0), listData[iData].strRecipe);   // recipe
+            m_model->setData(m_model->index(nRow, 1), strConstituent);              // constituent
+            m_listSortRecipe.push_back(listData[iData].strRecipe);
         }
     }
 
     void RecipeListWidget::resizeEvent(QResizeEvent *event)
     {
         m_pUi->m_listViewRecipe->setColumnWidth(0, this->width() / 2);
+    }
+
+    void RecipeListWidget::getSortRecipeList(QList<QString>& listSortRecipe)
+    {
+        listSortRecipe = m_listSortRecipe;
     }
 
 }

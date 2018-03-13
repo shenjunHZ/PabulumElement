@@ -41,6 +41,7 @@ namespace mainApp
         ~RecipeListWidget();
 
         void createRecipeList(QList<QList<QString>>& listVar);
+        void getSortRecipeList(QList<QString>& listSortRecipe);
 
     protected:
         void resizeEvent(QResizeEvent *event);
@@ -52,5 +53,6 @@ namespace mainApp
     private:
         Ui::RecipeListWidget* m_pUi;
         QStandardItemModel*	   m_model;
+        QList<QString>    m_listSortRecipe;
     };
 }

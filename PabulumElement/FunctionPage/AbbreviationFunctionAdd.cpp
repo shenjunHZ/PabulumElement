@@ -40,6 +40,7 @@ namespace mainApp
         connect(m_pUi->m_btnSave,   SIGNAL(clicked()), this, SLOT(OnSaveClicked()));
         connect(m_pUi->m_btnCancel, SIGNAL(clicked()), this, SLOT(OnCancelClicked()));
         connect(m_pUi->m_pTextEditDefinition, SIGNAL(textChanged()), this, SLOT(onTextChanged()));
+        connect(m_pUi->m_pTextEditDefinition, SIGNAL(cursorPositionChanged()), this, SLOT(onCursorPositionChanged()));
     }
 
     bool AbbreviationFunctionAdd::AddDefinitionFromSQL(const AbbreviationInfo_s& sInfo)

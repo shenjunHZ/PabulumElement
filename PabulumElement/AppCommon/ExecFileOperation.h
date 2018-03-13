@@ -26,6 +26,7 @@ namespace mainApp
         bool openExecFile();
         void closeExecFile();
         bool castVariantToList(const QVariant& var, QList<QList<QVariant>>& listRes);
+        void saveFile();
 
     private:
         void init();
@@ -34,6 +35,7 @@ namespace mainApp
         QString to26AlphabetString(int data);
 
     private:
+        bool    m_bNewFile;
         QString m_filePathName;
         QAxObject* m_pAxObject;
         QAxObject* m_pWorkBooks;

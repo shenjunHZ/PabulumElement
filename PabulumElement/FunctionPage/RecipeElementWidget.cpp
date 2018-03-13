@@ -86,9 +86,14 @@ namespace mainApp
         emit sgnExport();
     }
 
-    void RecipeElementWidget::getElementListData(QList<QString>& listElement, QList<float>& listConstituent, float& eachPer)
+    void RecipeElementWidget::getElementListData(QList<QString>& listElement, QList<QString>& listNVR, QList<float>& listConstituent, float& eachPer)
     {
-        m_pUi->m_pElementWidget->getElementListData(listElement, listConstituent, eachPer);
+        m_pUi->m_pElementWidget->getElementListData(listElement, listNVR, listConstituent, eachPer);
+    }
+
+    void RecipeElementWidget::getSortRecipeList(QList<QString>& listSortRecipe)
+    {
+        m_pUi->m_pRecipeWidget->getSortRecipeList(listSortRecipe);
     }
 
 }

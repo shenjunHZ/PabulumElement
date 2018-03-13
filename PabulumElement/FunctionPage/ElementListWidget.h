@@ -9,6 +9,8 @@
 #include <QtWidgets/QWidget>
 #include <QtGui/QStandardItem>
 
+#include "HomePage/ViewDefine.h"
+
 namespace Ui
 {
     class ElementListWidget;
@@ -25,10 +27,12 @@ namespace mainApp
         ~ElementListWidget();
 
         void createElementList(QList<QList<QString>>& listVar);
-        void getElementListData(QList<QString>& listElement, QList<float>& listConstituent, float& eachPer);
+        void getElementListData(QList<QString>& listElement, QList<QString>& listNVR, QList<float>& listConstituent, float& eachPer);
 
     protected:
         void resizeEvent(QResizeEvent *event);
+        QString calculateConstituentValue(QString& strElement, float& fConstituent);
+        QString calculateNRVReferenceValue(QString& strElement, float& fConstituent);
 
     private:
         void initUI();
@@ -43,7 +47,11 @@ namespace mainApp
         QStandardItemModel*	   m_model;
 
         QList<QString> m_listElement;   // protein axunge
+        QList<QString> m_listNRV;
         QList<float> m_listConstituent;
         float m_eachPer = 0.0;
+
+        RecipeReferenceTargetTable targetTable;
+        NRVReferenceValueTable valueTable;
     };
 }

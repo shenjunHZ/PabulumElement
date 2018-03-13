@@ -1,10 +1,8 @@
 #include "ElementListWidget.h"
-#include "HomePage/ViewDefine.h"
 #include "ui_ElementListWidget.h"
 
 namespace mainApp
 {
-
     ElementListWidget::ElementListWidget(QWidget* pParent /*= nullptr*/)
         : QWidget(pParent)
         , m_pUi(nullptr)
@@ -13,6 +11,80 @@ namespace mainApp
     {
         m_pUi = new Ui::ElementListWidget();
         m_pUi->setupUi(this);
+        targetTable = {
+            { QObject::tr("energy"),{ QObject::tr("kj"), 1.0f,   17.0f } },
+            { QObject::tr("protein"),{ QObject::tr("g"),  0.1f, 0.5f } },
+            { QObject::tr("fat"),{ QObject::tr("g"),  0.1f, 0.5f } },
+            { QObject::tr("saturated fat"),{ QObject::tr("g"),  0.1f, 0.1f } },
+            { QObject::tr("trans fat"),{ QObject::tr("g"),  0.1f, 0.3f } },
+            { QObject::tr("monounsaturated fatty fat"),{ QObject::tr("g"),  0.1f, 0.1f } },
+            { QObject::tr("polyunsaturated fatty fat"),{ QObject::tr("g"),  0.1f, 0.1f } },
+            { QObject::tr("cholesterol"),{ QObject::tr("mg"), 1.0f,   5.0f } },
+            { QObject::tr("carbohydrate"),{ QObject::tr("g"),  0.1f, 0.5f } },
+            { QObject::tr("sugar"),{ QObject::tr("g"),  0.1f, 0.5f } },
+            { QObject::tr("dietary fiber"),{ QObject::tr("g"),  0.1f, 0.5f } },
+            { QObject::tr("sodium"),{ QObject::tr("mg"), 1.0f,   5.0f } },
+            { QObject::tr("vitamin A"),{ QObject::tr("ug"), 1.0f,   8.0f } },
+            { QObject::tr("vitamin D"),{ QObject::tr("ug"), 0.1f, 0.1f } },
+            { QObject::tr("vitamin E"),{ QObject::tr("mg"), 0.01f, 0.28f } },
+            { QObject::tr("vitamin K"),{ QObject::tr("ug"), 0.1f,  1.6f } },
+            { QObject::tr("vitamin B1"),{ QObject::tr("mg"), 0.01f, 0.03f } },
+            { QObject::tr("vitamin B2"),{ QObject::tr("mg"), 0.01f, 0.03f } },
+            { QObject::tr("vitamin B6"),{ QObject::tr("mg"), 0.01f, 0.03f } },
+            { QObject::tr("vitamin B12"),{ QObject::tr("ug"), 0.01f, 0.05f } },
+            { QObject::tr("vitamin C"),{ QObject::tr("mg"), 0.1f,  2.0f } },
+            { QObject::tr("niacin"),{ QObject::tr("mg"), 0.01f, 0.28f } },
+            { QObject::tr("folic acid"),{ QObject::tr("ug"), 1.0f,    8.0f } },
+            { QObject::tr("pantothenic acid"),{ QObject::tr("mg"), 0.01, 0.10 } },
+            { QObject::tr("biotin"),{ QObject::tr("ug"), 0.1f,  0.6f } },
+            { QObject::tr("choline"),{ QObject::tr("mg"), 0.1f,  9.0f } },
+            { QObject::tr("phosphorus"),{ QObject::tr("mg"), 1.0f,    14.0f } },
+            { QObject::tr("potassium"),{ QObject::tr("mg"), 1.0f,    20.0f } },
+            { QObject::tr("magnesium"),{ QObject::tr("mg"), 1.0f,    6.0f } },
+            { QObject::tr("calcium"),{ QObject::tr("mg"), 1.0f,    8.0f } },
+            { QObject::tr("iron"),{ QObject::tr("mg"), 0.1f,  0.3f } },
+            { QObject::tr("zinc"),{ QObject::tr("mg"), 0.01f, 0.30f } },
+            { QObject::tr("iodine"),{ QObject::tr("ug"), 0.1f,  3.0f } },
+            { QObject::tr("selenium"),{ QObject::tr("ug"), 0.1f,  1.0f } },
+            { QObject::tr("copper"),{ QObject::tr("mg"), 0.01f, 0.03f } },
+            { QObject::tr("fluorine"),{ QObject::tr("mg"), 0.01f, 0.02f } },
+            { QObject::tr("manganese"),{ QObject::tr("mg"), 0.01f, 0.06f } }
+        };
+        valueTable = {
+            { QObject::tr("energy"),           8400.0f },
+            { QObject::tr("protein"),          60.0f },
+            { QObject::tr("fat"),              60.0f },
+            { QObject::tr("saturated fat"),    20.0f },
+            { QObject::tr("cholesterol"),      300.0f },
+            { QObject::tr("carbohydrate"),     300.0f },
+            { QObject::tr("dietary fiber"),    25.0f },
+            { QObject::tr("vitamin A"),        800.0f },
+            { QObject::tr("vitamin D"),        5.0f },
+            { QObject::tr("vitamin E"),        14.0f },
+            { QObject::tr("vitamin K"),        80.0f },
+            { QObject::tr("vitamin B1"),       1.4f },
+            { QObject::tr("vitamin B2"),       1.4f },
+            { QObject::tr("vitamin B6"),       1.4f },
+            { QObject::tr("vitamin B12"),      2.4f },
+            { QObject::tr("vitamin C"),        100.0f },
+            { QObject::tr("niacin"),           14.0f },
+            { QObject::tr("folic acid"),       400.0f },
+            { QObject::tr("pantothenic acid"), 5.0f },
+            { QObject::tr("biotin"),           30.0f },
+            { QObject::tr("choline"),          450.0f },
+            { QObject::tr("calcium"),          800.0f },
+            { QObject::tr("phosphorus"),       700.0f },
+            { QObject::tr("potassium"),        2000.0f },
+            { QObject::tr("sodium"),           2000.0f },
+            { QObject::tr("magnesium"),        300.0f },
+            { QObject::tr("iron"),             15.0f },
+            { QObject::tr("zinc"),             15.0f },
+            { QObject::tr("iodine"),           150.0f },
+            { QObject::tr("selenium"),         50.0f },
+            { QObject::tr("copper"),           1.5f },
+            { QObject::tr("fluorine"),         1.0f },
+            { QObject::tr("manganese"),        3.0f }
+        };
 
         initUI();
         connectSgn();
@@ -71,7 +143,7 @@ namespace mainApp
         m_listElement.clear();
         //QList<float> listConstituent; // 含量列表
         m_listConstituent.clear();
-
+        m_listNRV.clear();
                                       // each element e.g. protein etc
         bool bFistElement = true;
         for (int iElement = Recipe_View_Column_MaterialCount + 1; iElement < listVar[0].size(); iElement++)
@@ -105,30 +177,61 @@ namespace mainApp
             int nRow = m_model->rowCount();
             QStandardItem* item = new QStandardItem();
             m_model->insertRow(nRow, item);
-            m_model->setData(m_model->index(nRow, 0), listElement[iIndex]);  // 
 
-            QString strUnit = QObject::tr("g");
-            float fElementReference = listConstituent[iIndex];
-            if (fElementReference < 0.001)
-            {
-                fElementReference *= 1000 * 1000;
-                strUnit = QObject::tr("ug");
-            }
-            else if (fElementReference < 1)
-            {
-                fElementReference *= 1000;
-                strUnit = QObject::tr("mg");
-            }
-            QString strTempConstituent = QString("%1").arg(fElementReference);
-            m_model->setData(m_model->index(nRow, 1), strTempConstituent + strUnit);  // 成分值
-
-            QString strPercent = "";
-            if (eachPer > 0.000001)
-            {
-                strPercent = QString("%1%2").arg(listConstituent[iIndex] / eachPer * 100).arg("%");
-                m_model->setData(m_model->index(nRow, 2), strPercent);  // 成分百分比例
-            }
+            m_model->setData(m_model->index(nRow, 0), listElement[iIndex]);        
+            m_model->setData(m_model->index(nRow, 1), calculateConstituentValue(listElement[iIndex], listConstituent[iIndex]));
+            m_model->setData(m_model->index(nRow, 2), calculateNRVReferenceValue(listElement[iIndex], listConstituent[iIndex]));
         }
+    }
+
+    QString ElementListWidget::calculateConstituentValue(QString& strElement, float& fConstituent)
+    {
+        QString strTempConstituent = "";
+        auto it = targetTable.find(strElement);
+        if(it != targetTable.end())
+        {
+            ReferenceTarget target = it->second;
+            if (QObject::tr("mg") == target.strUnit)
+            {
+                fConstituent *= 1000;
+            }
+            else if (QObject::tr("ug") == target.strUnit)
+            {
+                fConstituent *= 1000 * 1000;
+            }
+
+            if (target.iRetainPlace > 0.9 && target.iRetainPlace < 1.1)
+            {
+                int iConstituent = fConstituent;
+                fConstituent = iConstituent;
+            }
+            else if (target.iRetainPlace > 0.09 && target.iRetainPlace < 0.11)
+            {
+                int iConstituent = fConstituent * 10 + 0.5;
+                fConstituent = iConstituent / 10.0;
+            }
+            else if (target.iRetainPlace > 0.009 && target.iRetainPlace < 0.011)
+            {
+                int iConstituent = fConstituent * 100 + 0.5;
+                fConstituent = iConstituent / 100.0;
+            }
+
+            strTempConstituent = QString("%1 ").arg(fConstituent) + target.strUnit;
+        }
+        return strTempConstituent;
+    }
+
+    QString ElementListWidget::calculateNRVReferenceValue(QString& strElement, float& fConstituent)
+    {
+        QString strReferenceTmp = "";
+        auto it = valueTable.find(strElement);
+        if(it != valueTable.end())
+        {
+            strReferenceTmp = QString("%1%2").arg((int)(fConstituent / it->second * 100 + 0.5)).arg("%");
+            m_listNRV.push_back(strReferenceTmp);
+        }
+
+        return strReferenceTmp;
     }
 
     void ElementListWidget::resizeEvent(QResizeEvent *event)
@@ -137,11 +240,12 @@ namespace mainApp
         m_pUi->m_listViewElement->setColumnWidth(1, this->width() / 3);
     }
 
-    void ElementListWidget::getElementListData(QList<QString>& listElement, QList<float>& listConstituent, float& eachPer)
+    void ElementListWidget::getElementListData(QList<QString>& listElement, QList<QString>& listNVR, QList<float>& listConstituent, float& eachPer)
     {
         listElement = m_listElement;
         listConstituent = m_listConstituent;
         eachPer = m_eachPer;
+        listNVR = m_listNRV;
     }
 
 }
