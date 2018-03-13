@@ -44,6 +44,7 @@ namespace mainApp
             return false;
         }
         m_pWord->setProperty("Visible", bVisible);
+        m_pWord->setProperty("DisplayAlerts", false);
  
         QAxObject *pDocuments = m_pWord->querySubObject("Documents");
         if (!pDocuments)
