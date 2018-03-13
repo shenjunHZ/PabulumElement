@@ -44,7 +44,7 @@ HomePage::~HomePage()
 
 void HomePage::InitModule(mainApp::MaterialRepositoryWidget* pMaterialRepositoryWidget, mainApp::MaterialAnalyzeWidget* pMaterialAnalyzeWidge)
 {
-    QPanelButton* pBtn = new QPanelButton(this, QObject::tr("Material Repository"));
+    QPanelButton* pBtn = new QPanelButton(this, QObject::tr("Material Repository"), false);
     QIcon icon = QIcon(commonSpace::GetSkinPath("HomePage") + "localconfig.png");
     pBtn->load(icon.pixmap(92, 100));
     pBtn->setVisible(true);
@@ -64,7 +64,7 @@ void HomePage::InitModule(mainApp::MaterialRepositoryWidget* pMaterialRepository
 
     m_vecBtnInfo.push_back(struPanelBtnInfo);
 
-    QPanelButton* pBtnRecipe = new QPanelButton(this, QObject::tr("Prepare Table"));
+    QPanelButton* pBtnRecipe = new QPanelButton(this, QObject::tr("Prepare Table"), false);
     icon = QIcon(commonSpace::GetSkinPath("HomePage") + "HeatPic.png");
     pBtnRecipe->load(icon.pixmap(92, 100));
     pBtnRecipe->setVisible(true);

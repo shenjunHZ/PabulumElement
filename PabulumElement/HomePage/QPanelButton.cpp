@@ -8,10 +8,11 @@
 
 static const int MARGIN = 5;
 
-QPanelButton::QPanelButton(QWidget *parent,QString text)
+QPanelButton::QPanelButton(QWidget *parent, QString text, bool bPaint /*= true*/)
     : QPushButton(parent)
 {
     m_text = text;
+    m_bPaint = bPaint;
     m_btnState = Btn_Normal;
     m_pmNormal       =  QPixmap(commonSpace::GetSkinPath("HomePage/toolbar/") + "btn-n.png");
     m_pmHover        =  QPixmap(commonSpace::GetSkinPath("HomePage/toolbar/") + "btn-h.png");
@@ -19,7 +20,7 @@ QPanelButton::QPanelButton(QWidget *parent,QString text)
     m_pmHoverNoFocus =  QPixmap(commonSpace::GetSkinPath("HomePage/toolbar/") + "light.png");
     setStyleSheet("QPanelButton {font-size: 14px;}");
     ensurePolished();
-    m_ibtnWidth = 18*2+this->fontMetrics().width(text)+2*MARGIN;
+    m_ibtnWidth = 18 * 2 + this->fontMetrics().width(text) + 2 * MARGIN;
     setFixedWidth(m_ibtnWidth);
     setFlat(true);
 }
@@ -72,7 +73,10 @@ void QPanelButton::paintEvent(QPaintEvent* e)
 {
     QPushButton::paintEvent(e);
     QPainter painter(this);
-    //PaintMenuBtn(painter);
+    if (m_bPaint)
+    {
+        PaintMenuBtn(painter);
+    }
 }
 
 void QPanelButton::enterEvent(QEvent* e)

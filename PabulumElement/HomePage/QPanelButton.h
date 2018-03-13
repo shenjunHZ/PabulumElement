@@ -23,7 +23,7 @@ class QPanelButton : public QPushButton
 	Q_PROPERTY(QColor normalFontColor READ normalFontColor WRITE setNormalFontColor)
 
 public:
-	QPanelButton(QWidget* parent = 0,QString text="");
+	QPanelButton(QWidget* parent = 0, QString text="", bool bPaint = true);
 	~QPanelButton();
 	
 	void setText(const QString &text);
@@ -84,6 +84,7 @@ private:
 	QColor			m_selHoverFontColor;
 	QColor			m_selFontColor;
 	QColor			m_normalHoverFontColor;
+    bool            m_bPaint;
 };
 
 #endif // QPANELBUTTON_H

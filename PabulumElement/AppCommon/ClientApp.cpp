@@ -125,9 +125,9 @@ bool ClientApp::initInstance()
         m_pMainDlg->_SwitchMaximized();
         m_pHomePage->show();
 
-        connect(m_pMaterialRepositoryWidget, SIGNAL(sgnAddDefinition()), m_pMaterialAnalyzeWidget, SLOT(onUpdateDefinition()));
-        connect(m_pMaterialRepositoryWidget, SIGNAL(sgnModifyDefinition()), m_pMaterialAnalyzeWidget, SLOT(onUpdateDefinition()));
-        connect(m_pMaterialRepositoryWidget, SIGNAL(sgnModifyDefinition()), m_pMaterialAnalyzeWidget, SLOT(onUpdateDefinition()));
+        connect(m_pMaterialRepositoryWidget,  SIGNAL(sgnAddDefinition()),    m_pMaterialAnalyzeWidget, SLOT(onUpdateDefinition()));
+        connect(m_pMaterialRepositoryWidget,  SIGNAL(sgnModifyDefinition()), m_pMaterialAnalyzeWidget, SLOT(onUpdateDefinition()));
+        connect(m_pMaterialRepositoryWidget,  SIGNAL(sgnDelDefinition()),    m_pMaterialAnalyzeWidget, SLOT(onUpdateDefinition()));
 
         return true;
     }

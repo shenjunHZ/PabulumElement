@@ -193,11 +193,8 @@ namespace mainApp
 
     void AbbreviationFunctionSearch::onModifyDefinition(uint64_t iPrimaryKey, std::string strDefinition)
     {
-        bool bRec = false;
+        bool bRec = m_pMysqlDB->updateDefinition(iPrimaryKey, strDefinition);
 
-        {
-            bRec = m_pMysqlDB->updateDefinition(iPrimaryKey, strDefinition);
-        }
         if (bRec)
         {
             QString strText = m_pUi->m_labelEditACronym->text();
@@ -215,11 +212,7 @@ namespace mainApp
             return false;
         }
 
-        bool bRec = false;
-
-        {
-            bRec = m_pMysqlDB->deleteQuery(iPrimaryKey);
-        }
+        bool bRec = m_pMysqlDB->deleteQuery(iPrimaryKey);
         
         if (bRec)
         {

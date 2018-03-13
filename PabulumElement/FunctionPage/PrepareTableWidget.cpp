@@ -195,6 +195,7 @@ namespace mainApp
     void PrepareTableWidget::initDatabaseCombobox()
     {
         decodeDefinition(m_mapContains, m_mapMaterials);
+        m_pUi->m_cmbRecipe->clear();
 
         for each (auto material in m_mapContains)
         {

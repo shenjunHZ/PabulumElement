@@ -99,9 +99,9 @@ namespace mainApp
         connect(m_pUi->m_pSearchWord, SIGNAL(SignalSearchBtnClicked(QString&)), this, SLOT(OnSearchBtnClicked(QString&)));
         connect(this,                 SIGNAL(sgnShowNotifyDlg(QString&)),       this, SLOT(OnShowNotifyDlg(QString&)));
 
-        connect(m_pUi->m_pAddWidget,  SIGNAL(sgnAddDefinition()),    this, SIGNAL(sgnAddDefinition()));
-        connect(m_pUi->m_pSearchWord, SIGNAL(sgnModifyDefinition()), this, SIGNAL(sgnModifyDefinition()));
-        connect(m_pUi->m_pSearchWord, SIGNAL(sgnDelDefinition()),    this, SIGNAL(sgnDelDefinition()));
+        connect(m_pUi->m_pAddWidget,    SIGNAL(sgnAddDefinition()),    this, SIGNAL(sgnAddDefinition()));
+        connect(m_pUi->m_pSearchWidget, SIGNAL(sgnModifyDefinition()), this, SIGNAL(sgnModifyDefinition()));
+        connect(m_pUi->m_pSearchWidget, SIGNAL(sgnDelDefinition()),    this, SIGNAL(sgnDelDefinition()));
     }
 
     void MaterialRepositoryWidget::SetSelectWidgetType(widgetType_e nType)
