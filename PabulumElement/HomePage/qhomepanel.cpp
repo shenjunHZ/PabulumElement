@@ -43,33 +43,6 @@ void QHomePanel::SetPanelBtn(QVector<PanelBtnInfoEx_t> vecBtnInfo)
     m_vecBtnInfo = vecBtnInfo;
 }
 
-QLabel* QHomePanel::CreateLabel(QWidget*parent, const QRect& lblRec, const QString& lblText, const QColor& txtColor ,  const QColor& bgColor )
-{
-    QLabel * lbl = new QLabel(parent);
-    lbl->setGeometry(lblRec);
-    lbl->setText(lblText);
-
-    QPalette pal;
-    if(txtColor.isValid())
-    {
-        pal.setColor(QPalette::WindowText, txtColor);
-    }
-    if(bgColor.isValid())
-    {
-        pal.setColor(QPalette::Background, bgColor);
-        lbl->setAutoFillBackground(true);
-    }
-    lbl->setPalette(pal);
-    return lbl;
-}
-
-void QHomePanel::SetTitle(QString strTitle)
-{
-    QLabel *lblTitle = CreateLabel(this, QRect(0,0,150,24),strTitle,QColor::fromRgba(0xff5d6778));
-    lblTitle->setAlignment(Qt::AlignCenter);
-    lblTitle->setObjectName("HomeMouduleTitle");
-}
-
 void QHomePanel::OnBtnEnter(QString strPluginID, bool bCombine)
 {
 

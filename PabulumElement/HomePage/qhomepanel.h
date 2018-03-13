@@ -14,7 +14,6 @@ public:
 	QHomePanel(QWidget *parent = 0);
 	~QHomePanel();
 
-	void SetTitle(QString strTitle);
 	void SetPanelBtn(QVector<PanelBtnInfoEx_t> vecBtnInfo);
 
 public slots:
@@ -25,16 +24,12 @@ public slots:
 
 signals:
 	void SignalShowFloat();
-	//void SignalHideFloat();
 
 protected:
 
 	void LaunchPlugin(PanelBtnInfo_t& btnInfo);
-	QLabel* CreateLabel(QWidget*parent, const QRect&,const QString &, const QColor& txtColor=Qt::black, const QColor& bgColor="");
 
 protected:
-	//QLabel *m_lblPromptPointer;
-	//QLabel *m_lblPrompt;
 	QVector<PanelBtnInfoEx_t> m_vecBtnInfo;
 };
 

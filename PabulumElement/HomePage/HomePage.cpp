@@ -44,7 +44,6 @@ HomePage::~HomePage()
 
 void HomePage::InitModule(mainApp::MaterialRepositoryWidget* pMaterialRepositoryWidget, mainApp::MaterialAnalyzeWidget* pMaterialAnalyzeWidge)
 {
-    // ÅäÁÏ
     QPanelButton* pBtn = new QPanelButton(this, QObject::tr("Material Repository"));
     QIcon icon = QIcon(commonSpace::GetSkinPath("HomePage") + "localconfig.png");
     pBtn->load(icon.pixmap(92, 100));
@@ -65,7 +64,6 @@ void HomePage::InitModule(mainApp::MaterialRepositoryWidget* pMaterialRepository
 
     m_vecBtnInfo.push_back(struPanelBtnInfo);
 
-    // Åä·½
     QPanelButton* pBtnRecipe = new QPanelButton(this, QObject::tr("Prepare Table"));
     icon = QIcon(commonSpace::GetSkinPath("HomePage") + "HeatPic.png");
     pBtnRecipe->load(icon.pixmap(92, 100));
@@ -85,7 +83,7 @@ void HomePage::InitModule(mainApp::MaterialRepositoryWidget* pMaterialRepository
     m_vecBtnInfo.push_back(struPanelBtnInfoRecipe);
 
     m_mdBasic->SetPanelBtn(m_vecBtnInfo);
-    m_mdBasic->SetRowCol(0, 2);
+    m_mdBasic->SetRowCol(0, 5);
 }
 
 void HomePage::mousePressEvent(QMouseEvent * event)
