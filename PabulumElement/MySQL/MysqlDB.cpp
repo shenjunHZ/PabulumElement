@@ -30,7 +30,7 @@ namespace MysqlDB
  
         m_Database.setHostName(strHostName);
         m_Database.setPort(iPort);
-        m_Database.setDatabaseName("MeterialsDataBase");
+        m_Database.setDatabaseName("MaterialsDataBase");
         m_Database.setUserName(strUserName);
         m_Database.setPassword(strPassword);
 
