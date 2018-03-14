@@ -21,6 +21,12 @@ namespace mainApp
 
     void ModifyDefinitionDialog::showDialog(uint64_t iPrimaryKey, std::string strDefinition)
     {
+        QFont font;
+        font.setPixelSize(12);
+        font.setPointSize(12);
+        font.setFamily(QString::fromUtf8("Arial"));
+        m_pUi->m_textEdit->setCurrentFont(font);
+
         m_pUi->m_textEdit->setText(QString::fromStdString(strDefinition));
         m_iPrimaryKey = iPrimaryKey;
 

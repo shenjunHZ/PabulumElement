@@ -38,6 +38,9 @@ namespace mainApp
     signals:
         void sgnAddDefinition();
 
+    protected:
+        //void mousePressEvent(QMouseEvent *event);
+
     private:
         void ConnectSgn();
         // search from sql

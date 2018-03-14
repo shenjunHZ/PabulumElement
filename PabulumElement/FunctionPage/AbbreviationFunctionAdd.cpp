@@ -17,10 +17,17 @@ namespace mainApp
         m_pUi->setupUi(this);
 
         QFont font;
-        font.setPixelSize(14);
-        font.setPointSize(14);
+        font.setPixelSize(12);
+        font.setPointSize(12);
         font.setFamily(QString::fromUtf8("Arial"));
         m_pUi->m_pTextEditDefinition->setCurrentFont(font);
+
+        //QTextCursor& textCursor = m_pUi->m_pTextEditDefinition->textCursor();
+        //QTextCharFormat charFormat;
+        //charFormat.setFont(font);
+        //textCursor.setCharFormat(charFormat);
+        //m_pUi->m_pTextEditDefinition->setTextCursor(textCursor);
+
         ConnectSgn();
         //SET_MODULE_STYLE_BY_PATH("AbbreviationFunctionAdd");
     }
@@ -40,6 +47,7 @@ namespace mainApp
         connect(m_pUi->m_btnSave,   SIGNAL(clicked()), this, SLOT(OnSaveClicked()));
         connect(m_pUi->m_btnCancel, SIGNAL(clicked()), this, SLOT(OnCancelClicked()));
         connect(m_pUi->m_pTextEditDefinition, SIGNAL(textChanged()), this, SLOT(onTextChanged()));
+        //connect(m_pUi->m_pTextEditDefinition, SIGNAL(currentCharFormatChanged()), this, SLOT(onTextChanged()));
         connect(m_pUi->m_pTextEditDefinition, SIGNAL(cursorPositionChanged()), this, SLOT(onCursorPositionChanged()));
     }
 
@@ -80,8 +88,8 @@ namespace mainApp
     {
         // when i clear the text in QTextEdie the font change back, so need to reset font.
         QFont font; 
-        font.setPixelSize(14);
-        font.setPointSize(14);
+        font.setPixelSize(12);
+        font.setPointSize(12);
         font.setFamily(QString::fromUtf8("Arial"));
         m_pUi->m_pTextEditDefinition->setCurrentFont(font);
     }

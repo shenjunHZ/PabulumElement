@@ -202,7 +202,7 @@ namespace mainApp
 
             if (target.iRetainPlace > 0.9 && target.iRetainPlace < 1.1)
             {
-                int iConstituent = fConstituent;
+                int iConstituent = fConstituent + 0.5;
                 fConstituent = iConstituent;
             }
             else if (target.iRetainPlace > 0.09 && target.iRetainPlace < 0.11)
