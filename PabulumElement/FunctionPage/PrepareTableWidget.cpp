@@ -364,31 +364,6 @@ namespace mainApp
 
     void PrepareTableWidget::onExport()
     {
-//         QString strPath = QDir::currentPath();
-//         QString strName = m_pUi->m_editOfficialName->text();
-//         if (strName.isEmpty())
-//         {
-//             DSGUI::DSMessageNotify::Instance().AddTextNotification(QObject::tr("Official Name is empty!"));
-//         }
-//         // for word
-//         QString strFileName = strPath + "/OutputFiles/Official/" + strName; // output document
-//         QString strDotFile = QDir::currentPath() + "/Documents/OfficialTemplate.dot"; // word template
-//         if (nullptr == m_pWordFile || nullptr == m_pExcelFile)
-//         {
-//             return;
-//         }
-//         bool bOpen = m_pWordFile->openFile(strDotFile, false);
-//         if (!bOpen)
-//         {
-//             DSGUI::DSMessageNotify::Instance().AddTextNotification(QObject::tr("Open dot file filed!"));
-//             return;
-//         }
-
-//        prepareOfficialData();
-//        m_pWordFile->saveFile(strFileName);
-//        m_pWordFile->closeFile();
-
-         // for excel
          QString strPath = QDir::currentPath();
          QString strName = m_pUi->m_editOfficialName->text();
          if (strName.isEmpty())
@@ -402,37 +377,6 @@ namespace mainApp
          m_pWaitingWidget->StartWaiting();
          pThread.join();
 
-         m_pExcelFile->setFilePathName(strExcelFileName);
-         m_pExcelFile->openExecFile();
-         QList<QList<QVariant>> listVar;
-         QList<QVariant> listData;
-         foreach(QString strHead, m_lstHeader)
-         {
-             if (strHead == "No." || strHead == QObject::tr("Operator"))
-             {
-                 continue;
-             }
-             listData.push_back(strHead);
-         }    
-         addContainElementType(listData); // protein... protein...
-         listVar.push_back(listData);
-         listData.clear();
-
-         for (int nRow = 0; nRow < m_model->rowCount(); nRow++)
-         {
-             for (int nColumn = 1; nColumn < m_model->columnCount() - 1; nColumn++)
-             {
-                 QVariant varData = m_model->data(m_model->index(nRow, nColumn));
-                 listData.push_back(varData);
-             }
-             addContainElementValue(listData);
-             listVar.push_back(listData);
-             listData.clear();
-         }
-
-         m_pExcelFile->writeCurrentSheet(listVar);
-         m_pExcelFile->closeExecFile();
- //       m_pWaitingWidget->StopWaiting();
          DSGUI::DSMessageNotify::Instance().AddTextNotification(QObject::tr("Export file end!"));
     }
 
@@ -460,12 +404,13 @@ namespace mainApp
         m_pWordFile->replaceText("ExpirationDate", m_pUi->m_cmbExpirationDate->currentText());     
 
         QList<QString> listElement;
+        QList<QString> listUnit;
         QList<QString> listNRV;
         QList<float> listConstituent;
         float eachPer;
-        m_pRecipeElementWidget->getElementListData(listElement, listNRV, listConstituent, eachPer);
+        m_pRecipeElementWidget->getElementListData(listElement, listUnit, listNRV, listConstituent, eachPer);
         QStringList lstHeader;
-        QString strValue = QString("%1").arg(eachPer);
+        QString strValue = QString("%1").arg(100/*eachPer*/); // now hard code used
         lstHeader << QObject::tr("Project") << QObject::tr("Each(") + strValue + " g)" << QObject::tr("pabulum reference");
         QAxObject *pObject = m_pWordFile->insertTable("Table", listElement.size() + 1, lstHeader.size(), lstHeader);
         if (pObject)
@@ -473,7 +418,7 @@ namespace mainApp
             for (int nRow = 0; nRow < listElement.size(); nRow++)
             {
                 m_pWordFile->SetTableCellString(pObject, nRow + 2, 1, listElement[nRow]);
-                m_pWordFile->SetTableCellString(pObject, nRow + 2, 2, QString("%1").arg(listConstituent[nRow]));
+                m_pWordFile->SetTableCellString(pObject, nRow + 2, 2, QString("%1 %2").arg(listConstituent[nRow]).arg(listUnit[nRow]));
                 m_pWordFile->SetTableCellString(pObject, nRow + 2, 3, listNRV[nRow]);
             }
         }
@@ -500,34 +445,57 @@ namespace mainApp
     // for excel
     void PrepareTableWidget::onInportRecipeExcel()
     {
-        QString strFilePath = QFileDialog::getSaveFileName(this, tr("Export Recipe Table"), "", tr("*.xls"));
+        QString strFilePath = QFileDialog::getOpenFileName(this, tr("Inport Recipe Table"), "", tr("*.xls"));
+        if (strFilePath.isEmpty())
+        {
+            return;
+        }
+        std::thread pThread(&PrepareTableWidget::inportRecipeExcel, this, strFilePath);
+        m_pWaitingWidget->StartWaiting();
+        pThread.join();
 
+        // after read excel then process date out of thread, if in thread gui have some unknown problems
+        if (!m_listData.isEmpty() && m_listData[0].size() >= g_StartElement
+            && QObject::tr("code") == m_listData[0][0]) // code recipe constituent price
+        {
+            m_listElements.clear();
+
+            for (int iIndex = g_StartElement; iIndex < m_listData[0].size(); iIndex++)
+            {
+                if (0 != m_listElements.size() && m_listElements[0] == m_listData[0][iIndex].toString())
+                {
+                    break;
+                }
+                m_listElements.push_back(m_listData[0][iIndex].toString());
+            }
+
+            updateListCtrl();
+            addRecipeFromExcel(m_listData);
+        }
+    }
+
+    void PrepareTableWidget::inportRecipeExcel(QString strFilePath)
+    {
+        HRESULT result = OleInitialize(0);
         if (!strFilePath.isEmpty() && nullptr != m_pExcelFile)
         {
             m_listData.clear();
             m_pUi->m_btnRecipeExcel->setText(strFilePath);
+            m_pUi->m_btnRecipeExcel->setToolTip(strFilePath);
             m_pExcelFile->setFilePathName(strFilePath);
-            m_pExcelFile->openExecFile();
+            if (!m_pExcelFile->openExecFile())
+            {
+                m_pWaitingWidget->StopWaiting();
+                return;
+            }
             QVariant var;
             if (m_pExcelFile->readSheetAllData(var))
             {
                 m_pExcelFile->castVariantToList(var, m_listData);
             }
-
-            if (!m_listData.isEmpty() && m_listData[0].size() >= g_StartElement
-                && QObject::tr("code") == m_listData[0][0]) // code recipe constituent price
-            {
-                m_listElements.clear();
-
-                for (int iIndex = g_StartElement; iIndex < m_listData[0].size() || m_listElements[0] != m_listData[0][iIndex].toString(); iIndex++)
-                {
-                    m_listElements.push_back(m_listData[0][iIndex].toString());
-                }
-
-                updateListCtrl();
-                addRecipeFromExcel(m_listData);
-            }
         }
+        OleUninitialize();
+        m_pWaitingWidget->StopWaiting();
     }
 
     void PrepareTableWidget::addRecipeFromExcel(QList<QList<QVariant>>& listData)
@@ -538,11 +506,11 @@ namespace mainApp
             QStandardItem* item = new QStandardItem();
             m_model->insertRow(nRow, item);
 
-            for (int iIndex = 0; iIndex <= m_listElements.size() + Recipe_View_Column_MaterialPrice; iIndex++)
+            // NO.
+            QString strText = QString("%1").arg(nRow + 1);
+            m_model->setData(m_model->index(nRow, Recipe_View_Column_Num), strText);
+            for (int iIndex = 0; iIndex < m_listElements.size() + Recipe_View_Column_MaterialPrice; iIndex++)
             {
-                // NO.
-                QString strText = QString("%1").arg(nRow + 1);
-                m_model->setData(m_model->index(nRow, Recipe_View_Column_Num), strText); 
                 // material code
                 if (!QString::localeAwareCompare(listData[0][iIndex].toString(), QObject::tr("code")))
                 {
@@ -677,10 +645,10 @@ namespace mainApp
 
         int nRow = m_model->rowCount();
         /**************test using***************/
-        if (nRow > 22)
-        {
-            return;
-        }
+//         if (nRow > 22)
+//         {
+//             return;
+//         }
         /*****************************/
         std::map<QString, QString> mapContain = m_mapContains[strData];
         bool bNeedRefresh = false;
@@ -713,6 +681,7 @@ namespace mainApp
                 int iCount = m_lstHeader.size();
                 if (!strOperator.isEmpty())
                 {
+                    deleteOperatorWidget();
                     m_lstHeader[iCount - 1] = contain.first;
                 }
                 else
@@ -776,7 +745,8 @@ namespace mainApp
             addHeadListCtrl();
             for (int iIndex = 0; iIndex < m_model->rowCount(); iIndex++)
             {
-                tableOperateBtn(iIndex, Recipe_View_Column_MaterialPrice + 1 + m_listElements.size(), item);
+                QStandardItem* pItem = m_model->item(iIndex);
+                tableOperateBtn(iIndex, Recipe_View_Column_MaterialPrice + 1 + m_listElements.size(), pItem);
                 QStandardItem *tempItem = new QStandardItem();
                 m_model->insertRow(nRow + 1, tempItem);
                 m_model->removeRow(nRow + 1);
@@ -851,40 +821,54 @@ namespace mainApp
        m_pWordFile->closeFile();
 
        // for excel
-//        strExcelFileName.replace("/", "\\");
-//        m_pExcelFile->setFilePathName(strExcelFileName);
-//        m_pExcelFile->openExecFile();
-//        QList<QList<QVariant>> listVar;
-//        QList<QVariant> listData;
-//        foreach(QString strHead, m_lstHeader)
-//        {
-//            if (strHead == "No." || strHead == QObject::tr("Operator"))
-//            {
-//                continue;
-//            }
-//            listData.push_back(strHead);
-//        }  
-//        addContainElementType(listData); // protein... protein...
-//        listVar.push_back(listData);
-//        listData.clear();
-// 
-//        for (int nRow = 0; nRow < m_model->rowCount(); nRow++)
-//        {
-//            for (int nColumn = 1; nColumn < m_model->columnCount() - 1; nColumn++)
-//            {
-//                QVariant varData = m_model->data(m_model->index(nRow, nColumn));
-//                listData.push_back(varData);
-//            }
-//            addContainElementValue(listData);
-//            listVar.push_back(listData);
-//            listData.clear();
-//        }
-// 
-//        m_pExcelFile->writeCurrentSheet(listVar);
-//        m_pExcelFile->closeExecFile();
+       //strExcelFileName.replace("/", "\\");
+
+       m_pExcelFile->setFilePathName(strExcelFileName);
+       m_pExcelFile->openExecFile();
+       QList<QList<QVariant>> listVar;
+       QList<QVariant> listData;
+       foreach(QString strHead, m_lstHeader)
+       {
+           if (strHead == "No." || strHead == QObject::tr("Operator"))
+           {
+               continue;
+           }
+           listData.push_back(strHead);
+       }
+       addContainElementType(listData); // protein... protein...
+       listVar.push_back(listData);
+       listData.clear();
+
+       for (int nRow = 0; nRow < m_model->rowCount(); nRow++)
+       {
+           for (int nColumn = 1; nColumn < m_model->columnCount() - 1; nColumn++)
+           {
+               QVariant varData = m_model->data(m_model->index(nRow, nColumn));
+               listData.push_back(varData);
+           }
+           addContainElementValue(listData);
+           listVar.push_back(listData);
+           listData.clear();
+       }
+
+       m_pExcelFile->writeCurrentSheet(listVar);
+       m_pExcelFile->closeExecFile();
 
        OleUninitialize();
        m_pWaitingWidget->StopWaiting();
      }
+
+    void PrepareTableWidget::deleteOperatorWidget()
+    {
+        int row = m_model->rowCount();
+        for (int iIndex = 0; iIndex < row; iIndex++)
+        {
+            TableOperBtnWidget* pWidget = static_cast<TableOperBtnWidget*>(m_pUi->m_listViewRecipe->indexWidget(m_model->index(iIndex, m_lstHeader.size() - 1)));
+            if (nullptr != pWidget)
+            {
+                pWidget->allBtnHide();
+            }
+        }
+    }
 
 }

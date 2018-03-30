@@ -1,8 +1,9 @@
 #include "ExecFileOperation.h"
+#include "libdsl/dslbase.h"
 
 #include <MessageNotify/MessageNotify.h>
 #include <QtCore/QFileInfo>
-#include <Ole2.h>
+//#include <Ole2.h>
 
 const int g_iWorkSheetIndex = 1;
 
@@ -18,14 +19,14 @@ namespace mainApp
         m_pWorkSheet(nullptr)
         , m_bNewFile(false)
     {
-        HRESULT result = OleInitialize(0);
-        init();
+        //HRESULT result = OleInitialize(0);
+        //init();
     }
 
     ExecFileOperation::~ExecFileOperation()
     {
         closeExecFile();
-        OleUninitialize();
+        //OleUninitialize();
 
         m_pWorkSheet = nullptr;
         m_pWorkSheets = nullptr;
@@ -60,7 +61,8 @@ namespace mainApp
 
     bool ExecFileOperation::openExecFile()
     {
-        if (m_filePathName.isEmpty())
+        init();
+        if (m_filePathName.isEmpty() || nullptr == m_pWorkBooks)
         {
             DSGUI::DSMessageNotify::Instance().AddTextNotification(QObject::tr("Open excel filed!"));
             return false;
@@ -81,7 +83,7 @@ namespace mainApp
         }
         if (!m_pWorkBook)
         {
-            DSGUI::DSMessageNotify::Instance().AddTextNotification(QObject::tr("Open file filed!"));
+            DSGUI::DSMessageNotify::Instance().AddTextNotification(QObject::tr("Open work book filed!"));
             return false;
         }
         QVariant varTitle = m_pAxObject->property("Caption"); // 获取标题
@@ -127,6 +129,12 @@ namespace mainApp
         m_pAxObject->setProperty("DisplayAlerts", true);
         //m_pWorkBook->dynamicCall("Close()"); // close work book
         m_pAxObject->dynamicCall("Quit()"); // close excel
+
+        m_pWorkBooks = nullptr;
+        m_pWorkBook = nullptr;
+        m_pWorkSheets = nullptr;
+        m_pWorkSheet = nullptr;
+        SAFE_DELETE(m_pAxObject);
     }
 
     bool ExecFileOperation::readSheetAllData(QVariant& var)

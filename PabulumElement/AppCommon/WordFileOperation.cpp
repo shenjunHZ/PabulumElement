@@ -15,9 +15,9 @@ namespace mainApp
         m_bIsOpen = false;
         m_bNewFile = false;
 
-        HRESULT result = OleInitialize(0);
+        //HRESULT result = OleInitialize(0);
 
-        if (result != S_OK && result != S_FALSE)
+        //if (result != S_OK && result != S_FALSE)
         {
             //qDebug() << QString("Could not initialize OLE (error %x)").arg((unsigned int)result);
         }
@@ -28,7 +28,7 @@ namespace mainApp
         //if(m_bIsOpen)  
         //    close();  
 
-        OleUninitialize();
+        //OleUninitialize();
     }
 
     bool WordFileOperation::openFile(QString& strDotFile, bool bVisible)
