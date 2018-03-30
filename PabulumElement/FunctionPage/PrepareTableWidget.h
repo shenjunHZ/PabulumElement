@@ -59,6 +59,8 @@ namespace mainApp
         void addContainElementValue(QList<QVariant>& listData);
 
         void waitForSaveFiles(QString strFileName, QString strExcelFileName);
+        void deleteOperatorWidget();
+        void inportRecipeExcel(QString strFilePath);
 
     signals:
         void sgnNextWidget();

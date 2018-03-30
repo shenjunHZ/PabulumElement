@@ -38,7 +38,7 @@ namespace mainApp
     protected:
         virtual void enterEvent(QEvent *ev);
 
-    private:
+    public:
         void allBtnHide();
 
     private:

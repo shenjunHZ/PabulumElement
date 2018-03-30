@@ -144,6 +144,7 @@ namespace mainApp
         //QList<float> listConstituent; // º¬Á¿ÁÐ±í
         m_listConstituent.clear();
         m_listNRV.clear();
+        m_listUnit.clear();
                                       // each element e.g. protein etc
         bool bFistElement = true;
         for (int iElement = Recipe_View_Column_MaterialCount + 1; iElement < listVar[0].size(); iElement++)
@@ -172,6 +173,7 @@ namespace mainApp
 
     void ElementListWidget::addElementToList(QList<QString>& listElement, QList<float>& listConstituent, float& eachPer)
     {
+        calculateEnergy();
         for (int iIndex = 0; iIndex < listElement.size() && iIndex < listConstituent.size(); iIndex++)
         {
             int nRow = m_model->rowCount();
@@ -182,6 +184,40 @@ namespace mainApp
             m_model->setData(m_model->index(nRow, 1), calculateConstituentValue(listElement[iIndex], listConstituent[iIndex]));
             m_model->setData(m_model->index(nRow, 2), calculateNRVReferenceValue(listElement[iIndex], listConstituent[iIndex]));
         }
+    }
+
+    void ElementListWidget::calculateEnergy()
+    {
+        if (m_listElement.size() != m_listConstituent.size())
+        {
+            return;
+        }
+
+        int iIndex = 0;
+        float fEnergy = 0.0;
+        for each (QString strElement in m_listElement)
+        {
+            if (0 == strElement.compare(QObject::tr("protein")))
+            {
+                fEnergy += m_listConstituent[iIndex] * 17; // according to standard file
+            }
+            else if (0 == strElement.compare(QObject::tr("fat")))
+            {
+                fEnergy += m_listConstituent[iIndex] * 37;
+            }
+            else if (0 == strElement.compare(QObject::tr("carbohydrate")))
+            {
+                fEnergy += m_listConstituent[iIndex] * 17;
+            }
+            else if (0 == strElement.compare(QObject::tr("dietary fiber")))
+            {
+                fEnergy += m_listConstituent[iIndex] * 8;
+            }
+            iIndex++;
+        }
+
+        m_listElement.push_front(QObject::tr("energy"));
+        m_listConstituent.push_front(fEnergy);
     }
 
     QString ElementListWidget::calculateConstituentValue(QString& strElement, float& fConstituent)
@@ -217,6 +253,7 @@ namespace mainApp
             }
 
             strTempConstituent = QString("%1 ").arg(fConstituent) + target.strUnit;
+            m_listUnit.push_back(target.strUnit);
         }
         return strTempConstituent;
     }
@@ -240,12 +277,13 @@ namespace mainApp
         m_pUi->m_listViewElement->setColumnWidth(1, this->width() / 3);
     }
 
-    void ElementListWidget::getElementListData(QList<QString>& listElement, QList<QString>& listNVR, QList<float>& listConstituent, float& eachPer)
+    void ElementListWidget::getElementListData(QList<QString>& listElement, QList<QString>& listUnit, QList<QString>& listNVR, QList<float>& listConstituent, float& eachPer)
     {
         listElement = m_listElement;
         listConstituent = m_listConstituent;
         eachPer = m_eachPer;
         listNVR = m_listNRV;
+        listUnit = m_listUnit;
     }
 
 }

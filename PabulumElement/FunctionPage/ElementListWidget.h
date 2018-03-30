@@ -27,7 +27,7 @@ namespace mainApp
         ~ElementListWidget();
 
         void createElementList(QList<QList<QString>>& listVar);
-        void getElementListData(QList<QString>& listElement, QList<QString>& listNVR, QList<float>& listConstituent, float& eachPer);
+        void getElementListData(QList<QString>& listElement, QList<QString>& listUnit, QList<QString>& listNVR, QList<float>& listConstituent, float& eachPer);
 
     protected:
         void resizeEvent(QResizeEvent *event);
@@ -40,6 +40,7 @@ namespace mainApp
         float calculateElementReference(float& fConstituent, QList<float>& listRatio);
         void refreshHeaderData();
         void addElementToList(QList<QString>& listElement, QList<float>& listConstituent, float& eachPer);
+        void calculateEnergy();
 
     private:
         Ui::ElementListWidget* m_pUi;
@@ -47,6 +48,7 @@ namespace mainApp
         QStandardItemModel*	   m_model;
 
         QList<QString> m_listElement;   // protein axunge
+        QList<QString> m_listUnit;
         QList<QString> m_listNRV;
         QList<float> m_listConstituent;
         float m_eachPer = 0.0;

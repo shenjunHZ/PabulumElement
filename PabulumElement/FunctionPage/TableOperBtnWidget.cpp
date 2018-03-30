@@ -35,6 +35,7 @@ namespace mainApp
             m_vecBtn[i]->hide();
         }
     }
+
     void TableOperBtnWidget::showEditButton()
     {
         if (m_vecBtn.isEmpty())

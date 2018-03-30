@@ -22,14 +22,18 @@
 #include <QtGui/QIcon>
 #include <QtGui/QFont>
 #include <QtCore/QTranslator>
+#include <QScreen>
 
 void SetTranslator(const QString strPath);
 void SearchQmFile(const QString & strPath);
 
 int main(int argc, char* argv[])
 {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
     QApplication app(argc, argv);
-    // 解决库路径问题
+    // resolve about path problem
     QTextCodec *xcodec = QTextCodec::codecForLocale();
     QString exeDir = xcodec->toUnicode(QByteArray(argv[0]));
     QString BKE_CURRENT_DIR = QFileInfo(exeDir).path();
@@ -76,10 +80,13 @@ int main(int argc, char* argv[])
     strNotifyQmPath = QCoreApplication::applicationDirPath().append("/Language/Language_zh/DSMessageNotify_zh.qm");
 
     // set font
+    QScreen* screen = app.primaryScreen();
+    qreal dpi = screen->logicalDotsPerInch() / 96;
     QFont chnFont("Microsoft YaHei");
     chnFont.setPixelSize(14);
-    QFont enFont("Arial");
-    enFont.setPixelSize(14);
+    //chnFont.setPointSize(14 * dpi);
+    //QFont enFont("Arial");
+    //enFont.setPixelSize(14);
     app.setFont(chnFont);
 
     // set notify
