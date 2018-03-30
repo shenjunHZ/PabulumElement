@@ -24,7 +24,7 @@ namespace mainApp
         ~RecipeElementWidget();
 
         void createData(QList<QList<QString>> listValue);
-        void getElementListData(QList<QString>& listElement, QList<QString>& listNVR, QList<float>& listConstituent, float& eachPer);
+        void getElementListData(QList<QString>& listElement, QList<QString>& listUnit, QList<QString>& listNVR, QList<float>& listConstituent, float& eachPer);
         void getSortRecipeList(QList<QString>& listSortRecipe);
 
     private:
