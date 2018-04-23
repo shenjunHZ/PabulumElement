@@ -1,20 +1,23 @@
 #include "MysqlDB.h"
 #include "libdsl/DStr.h"
+#include "libdsl/DPrintLog.h"
 
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlRecord>
 #include <QtSql/QSqlField>
+#include <QtSql/QSqlError>
 #include <QtCore/QVariant>
 #include <QtCore/QDebug>
 #include <QtCore/QCoreApplication>
+#include <QString>
 
 namespace MysqlDB
 {
 
     CMysqlDB::CMysqlDB() : m_MaterialTable("")
     {
-// 		qDebug() << QSqlDatabase::drivers();
-// 		qDebug() << QCoreApplication::libraryPaths();
+ 		//qDebug() << QSqlDatabase::drivers();
+ 		//qDebug() << QCoreApplication::libraryPaths();
 
         m_Database = QSqlDatabase::addDatabase("QMYSQL", "MySqlLink");
     }
@@ -33,8 +36,23 @@ namespace MysqlDB
         m_Database.setDatabaseName("MaterialsDataBase");
         m_Database.setUserName(strUserName);
         m_Database.setPassword(strPassword);
+        QString strLogInfo;
+        QString strPort = QString::number(iPort);
+        strLogInfo = "host: " + strHostName + ",port: " + strPort + ",Name: " + strUserName + ",Password: " + strPassword;
+        DLOG_INFO("%s", strLogInfo.toStdString().c_str());
 
-        return m_Database.open();
+        bool bOpen = m_Database.open();
+        if (!bOpen)
+        {
+            QString strErr = m_Database.lastError().databaseText();
+            DLOG_ERR("Open mysql database error: %s", strErr.toStdString().c_str());
+
+            QString strErrCode = m_Database.lastError().nativeErrorCode();
+            QString strText = m_Database.lastError().text();
+            DLOG_ERR("mysql database error code: %s, error info: %s", 
+                strErrCode.toStdString().c_str(), strText.toStdString().c_str());
+        }
+        return bOpen;
     }
 
     bool CMysqlDB::IsTableExist(QString& strTableName)

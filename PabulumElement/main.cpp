@@ -6,6 +6,7 @@
 */
 #include "Tools/Dir.h"
 #include "Tools/File.h"
+#include "libdsl/DPrintLog.h"
 #include "AppCommon/ClientApp.h"
 #include "Common/GlobalDataCenter/GlobalDataCenter.h"
 #include "MessageNotify/MessageNotify.h"
@@ -17,7 +18,6 @@
 #include <QtWidgets/QApplication>
 #include <QtCore/QTextCodec>
 #include <QtCore/QDir>
-#include <QtCore/QTime>
 #include <QtCore/QFile>
 #include <QtGui/QIcon>
 #include <QtGui/QFont>
@@ -38,13 +38,14 @@ int main(int argc, char* argv[])
     QString exeDir = xcodec->toUnicode(QByteArray(argv[0]));
     QString BKE_CURRENT_DIR = QFileInfo(exeDir).path();
     BKE_CURRENT_DIR.replace("//", "/");
-    QStringList  libpath;
 
-    libpath << BKE_CURRENT_DIR + QString::fromLocal8Bit("/plugins/platforms");
-    libpath << BKE_CURRENT_DIR << BKE_CURRENT_DIR + QString::fromLocal8Bit("/plugins/imageformats");
-    libpath << BKE_CURRENT_DIR + QString::fromLocal8Bit("/plugins");
-    libpath << QApplication::libraryPaths();
-    QApplication::setLibraryPaths(libpath);
+    // add load library path
+    //QStringList  libpath;
+    //libpath << BKE_CURRENT_DIR + QString::fromLocal8Bit("/plugins/platforms");
+    //libpath << BKE_CURRENT_DIR << BKE_CURRENT_DIR + QString::fromLocal8Bit("/plugins/imageformats");
+    //libpath << BKE_CURRENT_DIR + QString::fromLocal8Bit("/plugins");
+    //libpath << QApplication::libraryPaths();
+    //QApplication::setLibraryPaths(libpath);
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
@@ -59,11 +60,6 @@ int main(int argc, char* argv[])
     // global common component
     Common::CGlobalDataCenter::GetInstance().SetCurrentDirPath_UTF8(strCurPath.toUtf8().data());
     Common::CGlobalDataCenter::GetInstance().SetCurrentDirPath(strCurPath.toLocal8Bit().data());
-
-    // to do log
-    QTime curTime = QTime::currentTime();
-    char scLogName[25] = { 0 };
-    sprintf_s(scLogName, sizeof(scLogName), "log\\%02d-%02d-%02d", curTime.hour(), curTime.minute(), curTime.second());
 
     // app set
     QString strAppName = "Pabulum Element";
@@ -83,7 +79,7 @@ int main(int argc, char* argv[])
     QScreen* screen = app.primaryScreen();
     qreal dpi = screen->logicalDotsPerInch() / 96;
     QFont chnFont("Microsoft YaHei");
-    chnFont.setPixelSize(14);
+    chnFont.setPixelSize(14 * dpi);
     //chnFont.setPointSize(14 * dpi);
     //QFont enFont("Arial");
     //enFont.setPixelSize(14);

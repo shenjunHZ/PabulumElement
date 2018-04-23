@@ -4,9 +4,11 @@
 #include "Login/LoginUI.h"
 #include "FunctionPage/MaterialRepositoryWidget.h"
 #include "FunctionPage/MaterialAnalyzeWidget.h"
+#include "LocalIniFile/LocalIniFile.h"
 
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDesktopWidget>
+#include <QtCore/QTime>
 
 ClientApp theApp;
 
@@ -36,6 +38,18 @@ bool ClientApp::initModule()
 {
 //     m_pMaterialRepositoryWidget = new mainApp::MaterialRepositoryWidget();
 //     m_pPrepareTableWidget = new mainApp::PrepareTableWidget();
+
+    // to do log
+    std::unique_ptr<CLocalIniFile> pLocalIniFile = std::make_unique<CLocalIniFile>();
+    QVariant var = pLocalIniFile->ReadValue("Logger", "Level", "Localcfg.ini");
+    DLOG_SET_LEVEL(var.toInt());
+    DLOG_SET_SIZE(10*1024*1024);
+    DLOG_SET_FILE(".\\log\\PabulumElement");
+    QTime curTime = QTime::currentTime();
+    char scLogName[25] = { 0 };
+    sprintf_s(scLogName, sizeof(scLogName), "log\\%02d-%02d-%02d", curTime.hour(), curTime.minute(), curTime.second());
+    DLOG_INFO("%s", scLogName);
+    DLOG_INFO("ClientApp::initInstance:start");
 
     return true;
 }
@@ -92,7 +106,6 @@ bool ClientApp::isRunning()
 
 bool ClientApp::initInstance()
 {
-    DLOG_INFO("ClientApp::initInstance:start");
     initModule();
 
     if (createClientInitCtrl())
