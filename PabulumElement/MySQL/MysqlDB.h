@@ -21,6 +21,12 @@ QTDS        Sybase Adaptive Server
 
 namespace MysqlDB
 {
+    typedef struct materialParamaters
+    {
+        std::string strAcRonym;
+        std::string strDefinition;
+    }materialParamaters;
+
     class CMysqlDB
     {
     public:
@@ -42,7 +48,7 @@ namespace MysqlDB
         */
         bool createTable(QString& strTable);
 
-        std::map<int, std::string> outputWithPreparedQuery(const QString &name);
+        std::map<int, materialParamaters> outputWithPreparedQuery(const QString &name);
         /* 
         add material 
         name: ≈‰¡œ√˚£®787£©

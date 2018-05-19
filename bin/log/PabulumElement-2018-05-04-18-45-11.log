@@ -1,0 +1,5 @@
+[0504 18:45:11.801][ClientApp.cpp:51] TID 57024 [INFO] ClientApp::initModule(): log\18-45-11
+[0504 18:45:11.804][ClientApp.cpp:52] TID 57024 [INFO] ClientApp::initModule(): ClientApp::initInstance:start
+[0504 18:45:16.436][MysqlDB.cpp:42] TID 57024 [INFO] MysqlDB::CMysqlDB::connectToSql(): host: 127.0.0.1,port: 10086,Name: root,Password: root
+[0504 18:46:23.771][qcontainmanager.cpp:343] TID 57024 [INFO] QContainManager::OnCloseWindow(): CloseWindow
+[0504 18:46:23.771][qcontainmanager.cpp:349] TID 57024 [INFO] QContainManager::ExitContainManage(): Exit DSSClient

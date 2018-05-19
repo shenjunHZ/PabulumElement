@@ -146,21 +146,24 @@ namespace MysqlDB
     * 
     * @param username
     */
-    std::map<int, std::string> CMysqlDB::outputWithPreparedQuery(const QString& name)
+    std::map<int, materialParamaters> CMysqlDB::outputWithPreparedQuery(const QString& name)
     {
-        QString sql = QString::fromStdString("SELECT * FROM %1 WHERE ACRONYM=:ACRONYM").arg(m_MaterialTable);
+        //QString sql = QString::fromStdString("SELECT * FROM %1 WHERE ACRONYM=:ACRONYM").arg(m_MaterialTable);
+        QString sql = QString::fromStdString("SELECT * FROM %1 WHERE ACRONYM like '%%2%'").arg(m_MaterialTable).arg(name);
         QSqlQuery query = QSqlQuery::QSqlQuery(m_Database);  
         query.prepare(sql);
 
-        query.bindValue(":ACRONYM", name);
+        //query.bindValue(":ACRONYM", name);
         query.exec();
-        std::map<int, std::string> outPutExpression;
+        std::map<int, materialParamaters> outPutExpression;
         while (query.next()) // loop
         {
             QString output = query.value("DEFINITION").toString();
+            QString strAcronym = query.value("ACRONYM").toString();
+            materialParamaters param{ strAcronym.toStdString() , output.toStdString() };
 
             int iId = query.value("ID").toInt();
-            outPutExpression[iId] = output.toStdString();
+            outPutExpression[iId] = param;
         }
 
         return  outPutExpression;
