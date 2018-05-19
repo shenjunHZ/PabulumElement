@@ -1,4 +1,5 @@
 #include "WordFileOperation.h"
+#include "libdsl/DPrintLog.h"
 
 #include <Ole2.h>
 #include <QtCore/QFile>
@@ -41,6 +42,7 @@ namespace mainApp
         bool bFlag = m_pWord->setControl("word.Application");
         if (!bFlag)
         {
+            DLOG_ERR("word set control failed.");
             return false;
         }
         m_pWord->setProperty("Visible", bVisible);
@@ -49,6 +51,7 @@ namespace mainApp
         QAxObject *pDocuments = m_pWord->querySubObject("Documents");
         if (!pDocuments)
         {
+            DLOG_ERR("word query object of documents failed.");
             return false;
         }
         pDocuments->dynamicCall("Add(QString)", strDotFile);
@@ -61,6 +64,7 @@ namespace mainApp
         }
         else
         {
+            DLOG_ERR("word active document failed.");
             m_bIsOpen = false;
         }
         return m_bIsOpen;

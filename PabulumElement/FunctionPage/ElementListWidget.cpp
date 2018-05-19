@@ -1,6 +1,10 @@
 #include "ElementListWidget.h"
 #include "ui_ElementListWidget.h"
 
+constexpr int ELEMENTCOLUMN = 0;
+constexpr int CONTENTCOLUMN = 2;
+constexpr int NRVCOLUMN = 3;
+
 namespace mainApp
 {
     ElementListWidget::ElementListWidget(QWidget* pParent /*= nullptr*/)
@@ -98,7 +102,8 @@ namespace mainApp
     void ElementListWidget::initUI()
     {
         QStringList lstHeader;
-        lstHeader << QObject::tr("Project") << QObject::tr("Each(") + m_strValue + " g)"<<QObject::tr("pabulum reference");
+        lstHeader << QObject::tr("Project") << QObject::tr("Each(") + m_strValue + " g)"
+            << QObject::tr("Each(") + "100 g)" << QObject::tr("pabulum reference");
         m_model = new QStandardItemModel(0, lstHeader.count());
 
         m_pUi->m_listViewElement->setModel(m_model);
@@ -111,10 +116,17 @@ namespace mainApp
         }
     }
 
+    void ElementListWidget::resizeEvent(QResizeEvent *event)
+    {
+        m_pUi->m_listViewElement->setColumnWidth(0, this->width() / 3);
+        m_pUi->m_listViewElement->setColumnWidth(1, this->width() / 3);
+    }
+
     void ElementListWidget::refreshHeaderData()
     {
         QStringList lstHeader;
-        lstHeader << QObject::tr("Project") << QObject::tr("Each(") + m_strValue + " g)" << QObject::tr("pabulum reference");
+                lstHeader << QObject::tr("Project") << QObject::tr("Each(") + m_strValue + " g)"
+            << QObject::tr("Each(") + "100 g)" << QObject::tr("pabulum reference");
 
         int begin = 0;
         foreach(QString name, lstHeader)
@@ -145,6 +157,7 @@ namespace mainApp
         m_listConstituent.clear();
         m_listNRV.clear();
         m_listUnit.clear();
+        m_eachPer = 0.0;
                                       // each element e.g. protein etc
         bool bFistElement = true;
         for (int iElement = Recipe_View_Column_MaterialCount + 1; iElement < listVar[0].size(); iElement++)
@@ -167,22 +180,315 @@ namespace mainApp
         }
 
         m_strValue = QString("%1").arg(m_eachPer);
+        changeConstituentToHundredEachPer(m_listConstituent, m_listConstituentHundred);
         refreshHeaderData();
-        addElementToList(m_listElement, m_listConstituent, m_eachPer);
+
+        calculateEnergy(); 
+        addElementToList(m_listElement, m_listConstituent, m_listConstituentHundred, m_eachPer);
+        calculateUnitAndNRV(m_listElement, m_listConstituentHundred);
     }
 
-    void ElementListWidget::addElementToList(QList<QString>& listElement, QList<float>& listConstituent, float& eachPer)
+    // 转换到每份100克的数据
+    void ElementListWidget::changeConstituentToHundredEachPer(const QList<float>& listConstituent, QList<float>& listConstituentHundred)
     {
-        calculateEnergy();
-        for (int iIndex = 0; iIndex < listElement.size() && iIndex < listConstituent.size(); iIndex++)
+        m_listConstituentHundred.clear();
+        for each (float constituent in listConstituent)
+        {
+            constituent = constituent * 100 / m_eachPer;
+
+            listConstituentHundred.push_back(constituent);
+        }
+    }
+
+    // 添加到营养成份表
+    // to do 重构
+    void ElementListWidget::addElementToList(QList<QString> listElement, QList<float> listConstituent, 
+        QList<float> listConstituentHundred, float& eachPer)
+    {
+        // 能量
+        bool bAddElement = false;
+        int iIndex = 0;
+        for each (QString element in listElement)
+        {
+            if (0 == element.compare(QObject::tr("energy")))
+            {
+                bAddElement = true;
+                int nRow = m_model->rowCount();
+                QStandardItem* item = new QStandardItem();
+                m_model->insertRow(nRow, item);
+
+                m_model->setData(m_model->index(nRow, 0), listElement[iIndex]);
+                m_model->setData(m_model->index(nRow, 1), calculateConstituentValue(listElement[iIndex], listConstituent[iIndex], true));
+                m_model->setData(m_model->index(nRow, 2), calculateConstituentValue(listElement[iIndex], listConstituentHundred[iIndex]));
+                m_model->setData(m_model->index(nRow, 3), calculateNRVReferenceValue(listElement[iIndex], listConstituentHundred[iIndex]));
+
+                listElement.removeAt(iIndex);
+                listConstituent.removeAt(iIndex);
+                listConstituentHundred.removeAt(iIndex);
+                break;
+            }
+            iIndex++;
+        }
+
+        // 蛋白质
+        bAddElement = false;
+        iIndex = 0;
+        for each (QString element in listElement)
+        {
+            if (0 == element.compare(QObject::tr("protein")))
+            {
+                bAddElement = true;
+                int nRow = m_model->rowCount();
+                QStandardItem* item = new QStandardItem();
+                m_model->insertRow(nRow, item);
+
+                m_model->setData(m_model->index(nRow, 0), listElement[iIndex]);
+                m_model->setData(m_model->index(nRow, 1), calculateConstituentValue(listElement[iIndex], listConstituent[iIndex], true));
+                m_model->setData(m_model->index(nRow, 2), calculateConstituentValue(listElement[iIndex], listConstituentHundred[iIndex]));
+                m_model->setData(m_model->index(nRow, 3), calculateNRVReferenceValue(listElement[iIndex], listConstituentHundred[iIndex]));
+
+                listElement.removeAt(iIndex);
+                listConstituent.removeAt(iIndex);
+                listConstituentHundred.removeAt(iIndex);
+                break;
+            }
+            iIndex++;
+        }
+        if (!bAddElement)
+        {
+            int nRow = m_model->rowCount();
+            QStandardItem* item = new QStandardItem();
+            m_model->insertRow(nRow, item);
+
+            m_model->setData(m_model->index(nRow, 0), QObject::tr("protein"));
+            float fValue = 0.0;
+            m_model->setData(m_model->index(nRow, 1), calculateConstituentValue(QObject::tr("protein"), fValue, true));
+            m_model->setData(m_model->index(nRow, 2), calculateConstituentValue(QObject::tr("protein"), fValue));
+            m_model->setData(m_model->index(nRow, 3), calculateNRVReferenceValue(QObject::tr("protein"), fValue));
+
+            m_listElement.push_back(QObject::tr("protein"));
+            m_listConstituent.push_back(fValue);
+            m_listConstituentHundred.push_back(fValue);
+        }
+
+        // 脂肪
+        bAddElement = false;
+        iIndex = 0;
+        for each (QString element in listElement)
+        {
+            if (0 == element.compare(QObject::tr("fat")))
+            {
+                bAddElement = true;
+                int nRow = m_model->rowCount();
+                QStandardItem* item = new QStandardItem();
+                m_model->insertRow(nRow, item);
+
+                m_model->setData(m_model->index(nRow, 0), listElement[iIndex]);
+                m_model->setData(m_model->index(nRow, 1), calculateConstituentValue(listElement[iIndex], listConstituent[iIndex], true));
+                m_model->setData(m_model->index(nRow, 2), calculateConstituentValue(listElement[iIndex], listConstituentHundred[iIndex]));
+                m_model->setData(m_model->index(nRow, 3), calculateNRVReferenceValue(listElement[iIndex], listConstituentHundred[iIndex]));
+
+                listElement.removeAt(iIndex);
+                listConstituent.removeAt(iIndex);
+                listConstituentHundred.removeAt(iIndex);
+                break;
+            }
+            iIndex++;
+        }
+        if (!bAddElement)
+        {
+            int nRow = m_model->rowCount();
+            QStandardItem* item = new QStandardItem();
+            m_model->insertRow(nRow, item);
+
+            m_model->setData(m_model->index(nRow, 0), QObject::tr("fat"));
+            float fValue = 0.0;
+            m_model->setData(m_model->index(nRow, 1), calculateConstituentValue(QObject::tr("fat"), fValue, true));
+            m_model->setData(m_model->index(nRow, 2), calculateConstituentValue(QObject::tr("fat"), fValue));
+            m_model->setData(m_model->index(nRow, 3), calculateNRVReferenceValue(QObject::tr("fat"), fValue));
+
+            m_listElement.push_back(QObject::tr("fat"));
+            m_listConstituent.push_back(fValue);
+            m_listConstituentHundred.push_back(fValue);
+        }
+
+        // 反式脂肪
+        bAddElement = false;
+        iIndex = 0;
+        for each (QString element in listElement)
+        {
+            if (0 == element.compare(QObject::tr("trans fat")))
+            {
+                bAddElement = true;
+                int nRow = m_model->rowCount();
+                QStandardItem* item = new QStandardItem();
+                m_model->insertRow(nRow, item);
+
+                m_model->setData(m_model->index(nRow, 0), listElement[iIndex]);
+                m_model->setData(m_model->index(nRow, 1), calculateConstituentValue(listElement[iIndex], listConstituent[iIndex], true));
+                m_model->setData(m_model->index(nRow, 2), calculateConstituentValue(listElement[iIndex], listConstituentHundred[iIndex]));
+                m_model->setData(m_model->index(nRow, 3), calculateNRVReferenceValue(listElement[iIndex], listConstituentHundred[iIndex]));
+
+                listElement.removeAt(iIndex);
+                listConstituent.removeAt(iIndex);
+                listConstituentHundred.removeAt(iIndex);
+                break;
+            }
+            iIndex++;
+        }
+        if (!bAddElement)
+        {
+            int nRow = m_model->rowCount();
+            QStandardItem* item = new QStandardItem();
+            m_model->insertRow(nRow, item);
+
+            m_model->setData(m_model->index(nRow, 0), QObject::tr("trans fat"));
+            float fValue = 0.0;
+            m_model->setData(m_model->index(nRow, 1), calculateConstituentValue(QObject::tr("trans fat"), fValue, true));
+            m_model->setData(m_model->index(nRow, 2), calculateConstituentValue(QObject::tr("trans fat"), fValue));
+            m_model->setData(m_model->index(nRow, 3), calculateNRVReferenceValue(QObject::tr("trans fat"), fValue));
+
+            m_listElement.push_back(QObject::tr("trans fat"));
+            m_listConstituent.push_back(fValue);
+            m_listConstituentHundred.push_back(fValue);
+        }
+
+        // 碳水化合物
+        bAddElement = false;
+        iIndex = 0;
+        for each (QString element in listElement)
+        {
+            if (0 == element.compare(QObject::tr("carbohydrate")))
+            {
+                bAddElement = true;
+                int nRow = m_model->rowCount();
+                QStandardItem* item = new QStandardItem();
+                m_model->insertRow(nRow, item);
+
+                m_model->setData(m_model->index(nRow, 0), listElement[iIndex]);
+                m_model->setData(m_model->index(nRow, 1), calculateConstituentValue(listElement[iIndex], listConstituent[iIndex], true));
+                m_model->setData(m_model->index(nRow, 2), calculateConstituentValue(listElement[iIndex], listConstituentHundred[iIndex]));
+                m_model->setData(m_model->index(nRow, 3), calculateNRVReferenceValue(listElement[iIndex], listConstituentHundred[iIndex]));
+
+                listElement.removeAt(iIndex);
+                listConstituent.removeAt(iIndex);
+                listConstituentHundred.removeAt(iIndex);
+                break;
+            }
+            iIndex++;
+        }
+        if (!bAddElement)
+        {
+            int nRow = m_model->rowCount();
+            QStandardItem* item = new QStandardItem();
+            m_model->insertRow(nRow, item);
+
+            m_model->setData(m_model->index(nRow, 0), QObject::tr("carbohydrate"));
+            float fValue = 0.0;
+            m_model->setData(m_model->index(nRow, 1), calculateConstituentValue(QObject::tr("carbohydrate"), fValue, true));
+            m_model->setData(m_model->index(nRow, 2), calculateConstituentValue(QObject::tr("carbohydrate"), fValue));
+            m_model->setData(m_model->index(nRow, 3), calculateNRVReferenceValue(QObject::tr("carbohydrate"), fValue));
+
+            m_listElement.push_back(QObject::tr("carbohydrate"));
+            m_listConstituent.push_back(fValue);
+            m_listConstituentHundred.push_back(fValue);
+        }
+
+        // 膳食纤维
+        bAddElement = false;
+        iIndex = 0;
+        for each (QString element in listElement)
+        {
+            if (0 == element.compare(QObject::tr("dietary fiber")))
+            {
+                bAddElement = true;
+                int nRow = m_model->rowCount();
+                QStandardItem* item = new QStandardItem();
+                m_model->insertRow(nRow, item);
+
+                m_model->setData(m_model->index(nRow, 0), listElement[iIndex]);
+                m_model->setData(m_model->index(nRow, 1), calculateConstituentValue(listElement[iIndex], listConstituent[iIndex], true));
+                m_model->setData(m_model->index(nRow, 2), calculateConstituentValue(listElement[iIndex], listConstituentHundred[iIndex]));
+                m_model->setData(m_model->index(nRow, 3), calculateNRVReferenceValue(listElement[iIndex], listConstituentHundred[iIndex]));
+
+                listElement.removeAt(iIndex);
+                listConstituent.removeAt(iIndex);
+                listConstituentHundred.removeAt(iIndex);
+                break;
+            }
+            iIndex++;
+        }
+        if (!bAddElement)
+        {
+            int nRow = m_model->rowCount();
+            QStandardItem* item = new QStandardItem();
+            m_model->insertRow(nRow, item);
+
+            m_model->setData(m_model->index(nRow, 0), QObject::tr("dietary fiber"));
+            float fValue = 0.0;
+            m_model->setData(m_model->index(nRow, 1), calculateConstituentValue(QObject::tr("dietary fiber"), fValue, true));
+            m_model->setData(m_model->index(nRow, 2), calculateConstituentValue(QObject::tr("dietary fiber"), fValue));
+            m_model->setData(m_model->index(nRow, 3), calculateNRVReferenceValue(QObject::tr("dietary fiber"), fValue));
+
+            m_listElement.push_back(QObject::tr("dietary fiber"));
+            m_listConstituent.push_back(fValue);
+            m_listConstituentHundred.push_back(fValue);
+        }
+
+        // 钠
+        bAddElement = false;
+        iIndex = 0;
+        for each (QString element in listElement)
+        {
+            if (0 == element.compare(QObject::tr("sodium")))
+            {
+                bAddElement = true;
+                int nRow = m_model->rowCount();
+                QStandardItem* item = new QStandardItem();
+                m_model->insertRow(nRow, item);
+
+                m_model->setData(m_model->index(nRow, 0), listElement[iIndex]);
+                m_model->setData(m_model->index(nRow, 1), calculateConstituentValue(listElement[iIndex], listConstituent[iIndex], true));
+                m_model->setData(m_model->index(nRow, 2), calculateConstituentValue(listElement[iIndex], listConstituentHundred[iIndex]));
+                m_model->setData(m_model->index(nRow, 3), calculateNRVReferenceValue(listElement[iIndex], listConstituentHundred[iIndex]));
+
+                listElement.removeAt(iIndex);
+                listConstituent.removeAt(iIndex);
+                listConstituentHundred.removeAt(iIndex);
+                break;
+            }
+            iIndex++;
+        }
+        if (!bAddElement)
+        {
+            int nRow = m_model->rowCount();
+            QStandardItem* item = new QStandardItem();
+            m_model->insertRow(nRow, item);
+
+            m_model->setData(m_model->index(nRow, 0), QObject::tr("sodium"));
+            float fValue = 0.0;
+            m_model->setData(m_model->index(nRow, 1), calculateConstituentValue(QObject::tr("sodium"), fValue, true));
+            m_model->setData(m_model->index(nRow, 2), calculateConstituentValue(QObject::tr("sodium"), fValue));
+            m_model->setData(m_model->index(nRow, 3), calculateNRVReferenceValue(QObject::tr("sodium"), fValue));
+
+            m_listElement.push_back(QObject::tr("sodium"));
+            m_listConstituent.push_back(fValue);
+            m_listConstituentHundred.push_back(fValue);
+        }
+
+        // other
+        for (int iIndex = 0; iIndex < listElement.size() && iIndex < listConstituent.size() 
+            && iIndex < listConstituentHundred.size(); iIndex++)
         {
             int nRow = m_model->rowCount();
             QStandardItem* item = new QStandardItem();
             m_model->insertRow(nRow, item);
 
             m_model->setData(m_model->index(nRow, 0), listElement[iIndex]);        
-            m_model->setData(m_model->index(nRow, 1), calculateConstituentValue(listElement[iIndex], listConstituent[iIndex]));
-            m_model->setData(m_model->index(nRow, 2), calculateNRVReferenceValue(listElement[iIndex], listConstituent[iIndex]));
+            m_model->setData(m_model->index(nRow, 1), calculateConstituentValue(listElement[iIndex], listConstituent[iIndex], true));
+            m_model->setData(m_model->index(nRow, 2), calculateConstituentValue(listElement[iIndex], listConstituentHundred[iIndex]));
+            // using 100 each per calculate the NRV Reference
+            m_model->setData(m_model->index(nRow, 3), calculateNRVReferenceValue(listElement[iIndex], listConstituentHundred[iIndex]));
         }
     }
 
@@ -218,9 +524,10 @@ namespace mainApp
 
         m_listElement.push_front(QObject::tr("energy"));
         m_listConstituent.push_front(fEnergy);
+        m_listConstituentHundred.push_front(fEnergy * 100 / m_eachPer);
     }
 
-    QString ElementListWidget::calculateConstituentValue(QString& strElement, float& fConstituent)
+    QString ElementListWidget::calculateConstituentValue(QString& strElement, float& fConstituent, bool bAddUnit/* = false*/)
     {
         QString strTempConstituent = "";
         auto it = targetTable.find(strElement);
@@ -252,8 +559,16 @@ namespace mainApp
                 fConstituent = iConstituent / 100.0;
             }
 
-            strTempConstituent = QString("%1 ").arg(fConstituent) + target.strUnit;
-            m_listUnit.push_back(target.strUnit);
+            if (QObject::tr("g") == target.strUnit)
+            {
+                strTempConstituent = QString::number(fConstituent, 'f', 1) + target.strUnit;
+            }
+            else
+            {
+                strTempConstituent = QString("%1 ").arg(fConstituent) + target.strUnit;
+            }
+
+            // m_listUnit.push_back(target.strUnit);
         }
         return strTempConstituent;
     }
@@ -265,25 +580,81 @@ namespace mainApp
         if(it != valueTable.end())
         {
             strReferenceTmp = QString("%1%2").arg((int)(fConstituent / it->second * 100 + 0.5)).arg("%");
-            m_listNRV.push_back(strReferenceTmp);
+          //  m_listNRV.push_back(strReferenceTmp);
+        }
+        else if (0 == strElement.compare(QObject::tr("trans fat")))
+        {
+         //   m_listNRV.push_back(strReferenceTmp);
         }
 
         return strReferenceTmp;
     }
 
-    void ElementListWidget::resizeEvent(QResizeEvent *event)
+    void ElementListWidget::calculateUnitAndNRV(const QList<QString>& listElement, const QList<float>& m_listConstituentHundred)
     {
-        m_pUi->m_listViewElement->setColumnWidth(0, this->width() / 3);
-        m_pUi->m_listViewElement->setColumnWidth(1, this->width() / 3);
+        int iIndex = 0;
+        for each (QString element in listElement)
+        {
+            auto it = targetTable.find(element);
+            if (it != targetTable.end())
+            {
+                ReferenceTarget target = it->second;
+                m_listUnit.push_back(target.strUnit);
+            }
+            else
+            {
+                m_listUnit.push_back("");
+            }
+
+            QString strReferenceTmp = "";
+            auto itValue = valueTable.find(element);
+            if (itValue != valueTable.end())
+            {
+                strReferenceTmp = QString("%1%2").arg((int)(m_listConstituentHundred[iIndex] / itValue->second * 100 + 0.5)).arg("%");
+                m_listNRV.push_back(strReferenceTmp);
+            }
+            else if (0 == element.compare(QObject::tr("trans fat")))
+            {
+                m_listNRV.push_back(strReferenceTmp);
+            }
+            else
+            {
+                m_listNRV.push_back(strReferenceTmp);
+            }
+
+            iIndex++;
+        }
     }
 
-    void ElementListWidget::getElementListData(QList<QString>& listElement, QList<QString>& listUnit, QList<QString>& listNVR, QList<float>& listConstituent, float& eachPer)
+    void ElementListWidget::getElementListData(std::vector<nutrientContentTable>& contentTable, float& eachPer)
     {
-        listElement = m_listElement;
-        listConstituent = m_listConstituent;
-        eachPer = m_eachPer;
-        listNVR = m_listNRV;
-        listUnit = m_listUnit;
+        if (nullptr == m_model)
+        {
+            return;
+        }
+
+        for (int iRow = 0; iRow < m_model->rowCount(); iRow++)
+        {
+            nutrientContentTable content;
+            for (int iCol = 0; iCol < m_model->columnCount(); iCol++)
+            {
+                if (ELEMENTCOLUMN == iCol)
+                {
+                    content.strElement = m_model->data(m_model->index(iRow, iCol)).toString();
+                }
+                else if (CONTENTCOLUMN == iCol)
+                {
+                    content.strContentPenHundred = m_model->data(m_model->index(iRow, iCol)).toString();
+                }
+                else if (NRVCOLUMN == iCol)
+                {
+                    content.strNRV = m_model->data(m_model->index(iRow, iCol)).toString();
+                }
+            }
+            contentTable.push_back(content);
+        }
+
+        eachPer = 100.0;//m_eachPer; // now hard code used
     }
 
 }

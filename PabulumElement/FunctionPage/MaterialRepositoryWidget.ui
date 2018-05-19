@@ -77,6 +77,38 @@
         </spacer>
        </item>
        <item>
+        <widget class="DSGUI::DSComboBox" name="m_comboMaterial">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>30</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Fixed</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>4</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <widget class="DSGUI::DSSearchEdit" name="m_pSearchWord" native="true">
          <property name="minimumSize">
           <size>
@@ -147,6 +179,11 @@
    <extends>QWidget</extends>
    <header location="global">FunctionPage/Abbreviationfunctionadd.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>DSGUI::DSComboBox</class>
+   <extends>QComboBox</extends>
+   <header>ComboBox/ComboBox.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

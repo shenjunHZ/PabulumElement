@@ -102,6 +102,10 @@ namespace mainApp
         connect(m_pUi->m_pAddWidget,    SIGNAL(sgnAddDefinition()),    this, SIGNAL(sgnAddDefinition()));
         connect(m_pUi->m_pSearchWidget, SIGNAL(sgnModifyDefinition()), this, SIGNAL(sgnModifyDefinition()));
         connect(m_pUi->m_pSearchWidget, SIGNAL(sgnDelDefinition()),    this, SIGNAL(sgnDelDefinition()));
+        connect(m_pUi->m_pSearchWidget, SIGNAL(sgnAddComboItem(const std::vector<AbbreviationInfo_s>&)), 
+            this, SLOT(onAddComboItem(const std::vector<AbbreviationInfo_s>&)));
+
+        connect(m_pUi->m_comboMaterial, SIGNAL(currentIndexChanged(int)), m_pUi->m_pSearchWidget, SLOT(onCurrentIndexChanged(int)));
     }
 
     void MaterialRepositoryWidget::SetSelectWidgetType(widgetType_e nType)
@@ -147,6 +151,15 @@ namespace mainApp
     void MaterialRepositoryWidget::OnShowNotifyDlg(QString& strNotify)
     {
         ShowNotifyDlg(strNotify);
+    }
+
+    void MaterialRepositoryWidget::onAddComboItem(const std::vector<AbbreviationInfo_s>& vecInfo)
+    {
+        m_pUi->m_comboMaterial->clear();
+        for (auto info : vecInfo)
+        {
+            m_pUi->m_comboMaterial->addItem(QString::fromStdString(info.strAcronym));
+        }
     }
 
 } // end namespace mainApp

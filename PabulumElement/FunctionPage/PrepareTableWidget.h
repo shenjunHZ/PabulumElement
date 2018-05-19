@@ -74,6 +74,7 @@ namespace mainApp
         void onClearList();
         void onExport();
         void onInportRecipeExcel();
+        void onTextChanged(const QString & text);
 
     private:
         Ui::PrepareTableWidget*    m_pUi;

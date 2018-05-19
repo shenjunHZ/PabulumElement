@@ -2,6 +2,8 @@
 
 #include <QtWidgets/QWidget>
 
+#include "HomePage/ViewDefine.h"
+
 namespace Ui
 {
     class RecipeElementWidget;
@@ -24,7 +26,7 @@ namespace mainApp
         ~RecipeElementWidget();
 
         void createData(QList<QList<QString>> listValue);
-        void getElementListData(QList<QString>& listElement, QList<QString>& listUnit, QList<QString>& listNVR, QList<float>& listConstituent, float& eachPer);
+        void getElementListData(std::vector<nutrientContentTable>& contentTable, float& eachPer);
         void getSortRecipeList(QList<QString>& listSortRecipe);
 
     private:

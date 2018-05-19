@@ -43,12 +43,15 @@ namespace mainApp
     signals:
         void sgnModifyDefinition();
         void sgnDelDefinition();
+        void sgnAddComboItem(const std::vector<AbbreviationInfo_s>&);
 
     private:
         void InitUI();
         void ConnectSgn();
         // add definition list info
         bool AddDefinition(const std::vector<AbbreviationInfo_s>& vecDefinition);
+        // add definition info
+        bool AddDefinition(const AbbreviationInfo_s& Definition);
         // search from sql
         bool SearchDefinitionFromSQL(const QString& strText);
         // clear definition list info
@@ -63,6 +66,7 @@ namespace mainApp
         void OnItemDoubleClicked(QListWidgetItem* pItem);
         void OnEditDefinition(uint64_t iPrimaryKey, QListWidgetItem* pItem);
         void onModifyDefinition(uint64_t iPrimaryKey, std::string strDefinition);
+        void onCurrentIndexChanged(int iIndex);
 
     private:
         Ui::AbbreviationFunctionSearch* m_pUi;

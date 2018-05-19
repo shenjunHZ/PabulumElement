@@ -10,6 +10,7 @@
 #include <memory>
 
 #include "Dialog/Dialog.h"
+#include "HomePage/ViewDefine.h"
 
 namespace Ui
 {
@@ -57,7 +58,7 @@ namespace mainApp
     private slots:
         void OnCurrentIndexChanged(int nIndex);
         void OnSearchBtnClicked(QString& strSearchWord);
-        //void OnConfigWidgetShow();
+        void onAddComboItem(const std::vector<AbbreviationInfo_s>& vecInfo);
         void OnShowNotifyDlg(QString& strNotify);
         //void OnConnectSQL(SQLConnectInfo_s& info);
 

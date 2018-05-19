@@ -46,6 +46,11 @@ namespace mainApp
         connect(m_pModifyDefinitionDialog,     SIGNAL(sgnModifyDefinition(uint64_t, std::string)),      this, SLOT(onModifyDefinition(uint64_t, std::string)));
     }
 
+    void AbbreviationFunctionSearch::SetAbbreviationTable(std::shared_ptr<MysqlDB::CMysqlDB> pMysqlDB)
+    {
+        m_pMysqlDB = pMysqlDB;
+    }
+
     bool AbbreviationFunctionSearch::SetAcronymText(const QString& strText)
     {
         if ("" == strText)
@@ -53,8 +58,6 @@ namespace mainApp
             return false;
         }
 
-        m_pUi->m_labelEditACronym->setText(strText);
-        ClearDefinition();
         SearchDefinitionFromSQL(strText);
         return true;
     }
@@ -112,31 +115,77 @@ namespace mainApp
         return true;
     }
 
-    void AbbreviationFunctionSearch::SetAbbreviationTable(std::shared_ptr<MysqlDB::CMysqlDB> pMysqlDB)
+    bool AbbreviationFunctionSearch::AddDefinition(const AbbreviationInfo_s& Definition)
     {
-        m_pMysqlDB = pMysqlDB;
+        QString strDefinition = QString::fromStdString(Definition.strDefinition);
+        if (!strDefinition.isEmpty())
+        {
+            int iIndex = m_pUi->m_listWidgetDefinition->count();
+            QString strIndex = QString::number(iIndex + 1);
+            QListWidgetItem *pItem = new QListWidgetItem(strIndex + ".  " + strDefinition);
+            QFont font = pItem->font();
+            font.setPixelSize(16);
+            pItem->setFont(font);
+            QStringList strList = strDefinition.split("\n");
+            pItem->setTextAlignment(Qt::AlignTop | Qt::AlignLeft);
+                
+            if (0 == iIndex % 2)
+            {
+                pItem->setBackgroundColor(QColor(58, 62, 67));
+            }
+            else
+            {
+                pItem->setBackgroundColor(QColor(53, 57, 62));
+            }
+            pItem->setFlags(pItem->flags() & ~Qt::ItemIsSelectable);
+            pItem->setData(Qt::UserRole, Definition.iPrimaryKey);
+            QSize size(100, 40 * strList.size());
+            pItem->setSizeHint(size);
+            m_pUi->m_listWidgetDefinition->addItem(pItem);
+        }
+
+        return true;
     }
 
     bool AbbreviationFunctionSearch::SearchDefinitionFromSQL(const QString& strText)
     {
-
+        m_vecDefinitionInfos.clear();
+        std::map<int, MysqlDB::materialParamaters> mapDefinition = m_pMysqlDB->outputWithPreparedQuery(strText);
+        std::map<int, MysqlDB::materialParamaters>::iterator itMap = mapDefinition.begin();
+        for (; itMap != mapDefinition.end(); itMap++)
         {
-            m_vecDefinitionInfos.clear();
-            std::map<int, std::string> mapDefinition = m_pMysqlDB->outputWithPreparedQuery(strText);
-            std::map<int, std::string>::iterator itMap = mapDefinition.begin();
-            for (; itMap != mapDefinition.end(); itMap++)
-            {
-                AbbreviationInfo_s info;
-                info.iPrimaryKey = itMap->first;
-                info.strDefinition = itMap->second;
-                info.strAcronym = strText.toStdString();
-                m_vecDefinitionInfos.push_back(info);
-            }
+            AbbreviationInfo_s info;
+            info.iPrimaryKey = itMap->first;
+            info.strDefinition = itMap->second.strDefinition;
+            //info.strAcronym = strText.toStdString();
+            info.strAcronym = itMap->second.strAcRonym;
+            m_vecDefinitionInfos.push_back(info);
 
-            return AddDefinition(m_vecDefinitionInfos);
+            //m_pUi->m_comboMaterial->addItem(info.strAcronym);
+        }
+        if (m_vecDefinitionInfos.size() < 1)
+        {
+            return false;
         }
 
-        return false;
+        emit sgnAddComboItem(m_vecDefinitionInfos);
+        // 查询到后展示第一个数据
+        m_pUi->m_labelEditACronym->setText(QString::fromStdString(m_vecDefinitionInfos[0].strAcronym));
+        ClearDefinition();
+        return AddDefinition(m_vecDefinitionInfos[0]);
+    }
+
+    // 改变原料选择
+    void AbbreviationFunctionSearch::onCurrentIndexChanged(int iIndex)
+    {
+        if (iIndex >= m_vecDefinitionInfos.size())
+        {
+            return;
+        }
+
+        m_pUi->m_labelEditACronym->setText(QString::fromStdString(m_vecDefinitionInfos[iIndex].strAcronym));
+        ClearDefinition();
+        AddDefinition(m_vecDefinitionInfos[iIndex]);
     }
 
     void AbbreviationFunctionSearch::OnDeleteDefinition(uint64_t iPrimaryKey, QListWidgetItem* pItem)

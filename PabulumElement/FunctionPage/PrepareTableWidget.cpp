@@ -12,6 +12,7 @@
 #include "RecipeElementWidget.h"
 #include "MySQL/MysqlDB.h"
 #include "libdsl/dslbase.h"
+#include "libdsl/DPrintLog.h"
 
 #include <QtGui/QPixmap>
 #include <QtCore/QString>
@@ -174,11 +175,12 @@ namespace mainApp
 
     void PrepareTableWidget::connectSgn()
     {
-        connect(m_pUi->m_btnAdd,         SIGNAL(clicked()), this, SLOT(onAddRecipe()));
-        connect(m_pUi->m_btnNext,        SIGNAL(clicked()), this, SIGNAL(sgnNextWidget()));
-        connect(m_pUi->m_btnCreate,      SIGNAL(clicked()), this, SLOT(onCreateData()));
-        connect(m_pUi->m_btnClear,       SIGNAL(clicked()), this, SLOT(onClearList()));
-        connect(m_pUi->m_btnRecipeExcel, SIGNAL(clicked()), this, SLOT(onInportRecipeExcel()));
+        connect(m_pUi->m_btnAdd,           SIGNAL(clicked()),     this, SLOT(onAddRecipe()));
+        connect(m_pUi->m_btnNext,          SIGNAL(clicked()),     this, SIGNAL(sgnNextWidget()));
+        connect(m_pUi->m_btnCreate,        SIGNAL(clicked()),     this, SLOT(onCreateData()));
+        connect(m_pUi->m_btnClear,         SIGNAL(clicked()),     this, SLOT(onClearList()));
+        connect(m_pUi->m_btnRecipeExcel,   SIGNAL(clicked()),     this, SLOT(onInportRecipeExcel()));
+        connect(m_pUi->m_editFilterRecipe, SIGNAL(textChanged(const QString &)), this, SLOT(onTextChanged(const QString &)));
     }
 
     void PrepareTableWidget::SetAbbreviationTable(std::shared_ptr<MysqlDB::CMysqlDB> pMysqlDB)
@@ -192,6 +194,7 @@ namespace mainApp
         //initListCtrl();
     }
 
+    // 原料下拉菜单
     void PrepareTableWidget::initDatabaseCombobox()
     {
         decodeDefinition(m_mapContains, m_mapMaterials);
@@ -207,6 +210,22 @@ namespace mainApp
         }
     }
 
+    // 原料过滤显示
+    void PrepareTableWidget::onTextChanged(const QString & text)
+    {
+        m_pUi->m_cmbRecipe->clear();
+
+        for each (auto material in m_mapContains)
+        {
+            QString strRecipe = material.first;
+            if(!strRecipe.isEmpty() && strRecipe.contains(m_pUi->m_editFilterRecipe->text()))
+            {
+                m_pUi->m_cmbRecipe->addItem(strRecipe);
+            }
+        }
+    }
+
+    // 原料定义解析，成分含量
     void PrepareTableWidget::decodeDefinition(std::map<QString, std::map<QString, QString>>& mapContains,
         std::map<QString, QString>& mapMaterials)
     {
@@ -216,7 +235,7 @@ namespace mainApp
         }
         mapContains.clear();
         std::map<QString, QString> mapContaint;
-        m_listElements.clear();
+        //m_listElements.clear();
 
         for each (auto material in mapMaterials)
         {
@@ -381,6 +400,7 @@ namespace mainApp
     }
 
     // for word
+    // to do 重构
     void PrepareTableWidget::prepareOfficialData()
     {
         m_pWordFile->replaceText("OfficialName", m_pUi->m_editOfficialName->text()); // bookmark replace for official name
@@ -403,23 +423,27 @@ namespace mainApp
 
         m_pWordFile->replaceText("ExpirationDate", m_pUi->m_cmbExpirationDate->currentText());     
 
-        QList<QString> listElement;
-        QList<QString> listUnit;
-        QList<QString> listNRV;
-        QList<float> listConstituent;
+        //QList<QString> listElement;
+        //QList<QString> listUnit;
+        //QList<QString> listNRV;
+        //QList<float> listConstituent;
+        std::vector<nutrientContentTable> contentTable;
         float eachPer;
-        m_pRecipeElementWidget->getElementListData(listElement, listUnit, listNRV, listConstituent, eachPer);
+        m_pRecipeElementWidget->getElementListData(contentTable, eachPer);
         QStringList lstHeader;
-        QString strValue = QString("%1").arg(100/*eachPer*/); // now hard code used
+        QString strValue = QString("%1").arg(eachPer); 
         lstHeader << QObject::tr("Project") << QObject::tr("Each(") + strValue + " g)" << QObject::tr("pabulum reference");
-        QAxObject *pObject = m_pWordFile->insertTable("Table", listElement.size() + 1, lstHeader.size(), lstHeader);
+        QAxObject *pObject = m_pWordFile->insertTable("Table", contentTable.size() + 1, lstHeader.size(), lstHeader);
         if (pObject)
         {
-            for (int nRow = 0; nRow < listElement.size(); nRow++)
+            int nRow = 0;
+            for each (nutrientContentTable content in contentTable)
             {
-                m_pWordFile->SetTableCellString(pObject, nRow + 2, 1, listElement[nRow]);
-                m_pWordFile->SetTableCellString(pObject, nRow + 2, 2, QString("%1 %2").arg(listConstituent[nRow]).arg(listUnit[nRow]));
-                m_pWordFile->SetTableCellString(pObject, nRow + 2, 3, listNRV[nRow]);
+                m_pWordFile->SetTableCellString(pObject, nRow + 2, 1, content.strElement);
+                m_pWordFile->SetTableCellString(pObject, nRow + 2, 2, content.strContentPenHundred);
+                m_pWordFile->SetTableCellString(pObject, nRow + 2, 3, content.strNRV);
+
+                nRow++;
             }
         }
     }
@@ -442,7 +466,7 @@ namespace mainApp
         return strRecipeData;
     }
 
-    // for excel
+    // 导入excel配置清单
     void PrepareTableWidget::onInportRecipeExcel()
     {
         QString strFilePath = QFileDialog::getOpenFileName(this, tr("Inport Recipe Table"), "", tr("*.xls"));
@@ -808,10 +832,16 @@ namespace mainApp
             return;
         }
         HRESULT result = OleInitialize(0);
+        if(S_OK != result)
+        {
+            DLOG_ERR("OleInitialize filed result: %d", result);
+        }
+        
         // for word
         bool bOpen = m_pWordFile->openFile(strDotFile, false);
         if (!bOpen)
         {
+            DLOG_ERR("Open dot file filed: %s", strDotFile.toStdString().c_str());
             DSGUI::DSMessageNotify::Instance().AddTextNotification(QObject::tr("Open dot file filed!"));
             m_pWaitingWidget->StopWaiting();
             return;

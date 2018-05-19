@@ -105,6 +105,14 @@
     typedef std::map<QString, ReferenceTarget> RecipeReferenceTargetTable;
     typedef std::map<QString, float> NRVReferenceValueTable;
 
+    typedef struct nutrientContentTable
+    {
+        QString strElement;
+        QString strContentPerPart;
+        QString strContentPenHundred;
+        QString strNRV;
+    }nutrientContentTable;
+
     template<class T>
     struct DisableCompare : public std::binary_function<T, T, bool>
     {
