@@ -505,26 +505,54 @@ namespace mainApp
         {
             if (0 == strElement.compare(QObject::tr("protein")))
             {
-                fEnergy += m_listConstituent[iIndex] * 17; // according to standard file
+                fEnergy += roundingOffValue(m_listConstituent[iIndex]) * 17; // according to standard file
             }
             else if (0 == strElement.compare(QObject::tr("fat")))
             {
-                fEnergy += m_listConstituent[iIndex] * 37;
+                fEnergy += roundingOffValue(m_listConstituent[iIndex]) * 37;
             }
             else if (0 == strElement.compare(QObject::tr("carbohydrate")))
             {
-                fEnergy += m_listConstituent[iIndex] * 17;
+                fEnergy += roundingOffValue(m_listConstituent[iIndex]) * 17;
             }
             else if (0 == strElement.compare(QObject::tr("dietary fiber")))
             {
-                fEnergy += m_listConstituent[iIndex] * 8;
+                fEnergy += roundingOffValue(m_listConstituent[iIndex]) * 8;
             }
             iIndex++;
         }
-
-        m_listElement.push_front(QObject::tr("energy"));
         m_listConstituent.push_front(fEnergy);
-        m_listConstituentHundred.push_front(fEnergy * 100 / m_eachPer);
+
+        iIndex = 0;
+        fEnergy = 0.0;
+        for each (QString strElement in m_listElement)
+        {
+            if (0 == strElement.compare(QObject::tr("protein")))
+            {
+                fEnergy += roundingOffValue(m_listConstituentHundred[iIndex]) * 17; // according to standard file
+            }
+            else if (0 == strElement.compare(QObject::tr("fat")))
+            {
+                fEnergy += roundingOffValue(m_listConstituentHundred[iIndex]) * 37;
+            }
+            else if (0 == strElement.compare(QObject::tr("carbohydrate")))
+            {
+                fEnergy += roundingOffValue(m_listConstituentHundred[iIndex]) * 17;
+            }
+            else if (0 == strElement.compare(QObject::tr("dietary fiber")))
+            {
+                fEnergy += roundingOffValue(m_listConstituentHundred[iIndex]) * 8;
+            }
+            iIndex++;
+        }
+        m_listConstituentHundred.push_front(fEnergy /** 100 / m_eachPer*/);
+        m_listElement.push_front(QObject::tr("energy"));
+    }
+
+    float ElementListWidget::roundingOffValue(const float& fvalue)
+    {
+        int randingOffVaule = fvalue * 10 + 0.5;
+        return randingOffVaule / 10.0;
     }
 
     QString ElementListWidget::calculateConstituentValue(QString& strElement, float& fConstituent, bool bAddUnit/* = false*/)

@@ -44,6 +44,7 @@ namespace mainApp
         void calculateEnergy();
         void changeConstituentToHundredEachPer(const QList<float>& listConstituent, QList<float>& listConstituentHundred);
         void calculateUnitAndNRV(const QList<QString>& listElement, const QList<float>& m_listConstituentHundred);
+        float roundingOffValue(const float& fvalue);
 
     private:
         Ui::ElementListWidget* m_pUi;
