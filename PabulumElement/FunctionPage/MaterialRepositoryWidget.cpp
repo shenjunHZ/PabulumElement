@@ -81,14 +81,13 @@ namespace mainApp
         iconItemAdd.addPixmap(QPixmap(commonSpace::GetSkinPath("MaterialOperationWidget") + "ADD-p.png"), QIcon::Selected);
         m_pUi->m_pToolListView->AddItem(iconItemAdd, QObject::tr("Add"));
 
-        m_pUi->m_pSearchWidget->SetAbbreviationTable(m_pMysqlDB);
-        m_pUi->m_pAddWidget->SetAbbreviationTable(m_pMysqlDB);
-
         m_pUi->funcStackedWidget->setCurrentWidget(m_pUi->m_pSearchWidget);
         if (!createTable())
         {
             DSGUI::DSMessageNotify::Instance().AddTextNotification(QObject::tr("read database table failed!"));
         }
+        m_pUi->m_pSearchWidget->SetAbbreviationTable(m_pMysqlDB);
+        m_pUi->m_pAddWidget->SetAbbreviationTable(m_pMysqlDB);
     }
 
     void MaterialRepositoryWidget::ConnectSgn()

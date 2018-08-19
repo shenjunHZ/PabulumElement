@@ -61,13 +61,14 @@ namespace mainApp
         void waitForSaveFiles(QString strFileName, QString strExcelFileName);
         void deleteOperatorWidget();
         void inportRecipeExcel(QString strFilePath);
+        bool isExistInTable(const std::string& strData);
 
     signals:
         void sgnNextWidget();
         void sgnCreateData();
 
     private slots:
-        void onAddRecipe();
+        int onAddRecipe();
         void onTableOperIndex(QStandardItem* pItem);
         void onDelBtnClicked();
         void onCreateData();

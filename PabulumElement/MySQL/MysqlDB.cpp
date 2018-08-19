@@ -148,6 +148,11 @@ namespace MysqlDB
     */
     std::map<int, materialParamaters> CMysqlDB::outputWithPreparedQuery(const QString& name)
     {
+        std::map<int, materialParamaters> outPutExpression;
+        if (!m_Database.isOpen())
+        {
+            return outPutExpression;
+        }
         //QString sql = QString::fromStdString("SELECT * FROM %1 WHERE ACRONYM=:ACRONYM").arg(m_MaterialTable);
         QString sql = QString::fromStdString("SELECT * FROM %1 WHERE ACRONYM like '%%2%'").arg(m_MaterialTable).arg(name);
         QSqlQuery query = QSqlQuery::QSqlQuery(m_Database);  
@@ -155,7 +160,6 @@ namespace MysqlDB
 
         //query.bindValue(":ACRONYM", name);
         query.exec();
-        std::map<int, materialParamaters> outPutExpression;
         while (query.next()) // loop
         {
             QString output = query.value("DEFINITION").toString();
@@ -171,6 +175,10 @@ namespace MysqlDB
 
     bool CMysqlDB::deleteQuery(const int id)
     {
+        if (!m_Database.isOpen())
+        {
+            return false;
+        }
         QSqlQuery query = QSqlQuery::QSqlQuery(m_Database);
 
         QString strNum = QString::number(id);
@@ -181,10 +189,14 @@ namespace MysqlDB
 
     std::map<QString, QString> CMysqlDB::queryAllMaterial()
     {
+        std::map<QString, QString> mapMaterials;
+        if (!m_Database.isOpen())
+        {
+            return mapMaterials;
+        }
         char szSelectSql[1024] = { 0 };
         dsl::DStr::sprintf_x(szSelectSql, sizeof(szSelectSql),
             "select * from %s", m_MaterialTable.toStdString().c_str());
-        std::map<QString, QString> mapMaterials;
 
         QString strQuery = QString::fromStdString(szSelectSql);
         QSqlQuery query = QSqlQuery::QSqlQuery(m_Database);
@@ -210,6 +222,10 @@ namespace MysqlDB
 
     bool CMysqlDB::updateDefinition(uint64_t iPrimaryKey, std::string strDefinition)
     {
+        if (!m_Database.isOpen())
+        {
+            return false;
+        }
         char szSelectSql[1024] = { 0 };
 
         dsl::DStr::sprintf_x(szSelectSql, sizeof(szSelectSql),

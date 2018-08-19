@@ -7,6 +7,7 @@
 #pragma once
 
 #include <QtWidgets/QWidget>
+#include <QtGui/QStandardItemModel>
 #include <memory>
 
 #include "HomePage/ViewDefine.h"
@@ -43,6 +44,7 @@ namespace mainApp
 
     private:
         void ConnectSgn();
+        void showAllAbbreviations();
         // search from sql
         bool AddDefinitionFromSQL(const AbbreviationInfo_s& sInfo);
 
@@ -50,10 +52,13 @@ namespace mainApp
         void OnSaveClicked();
         void OnCancelClicked();
         void onTextChanged();
+        // 增加所有原料列表
+        void onAllSearchClicked();
         //void onCursorPositionChanged();
 
     private:
         Ui::AbbreviationFunctionAdd*    m_pUi;
+        QStandardItemModel*        m_model;
         //SqliteDB::AbbreviationTable*    m_pAbbreviationTable;
         std::shared_ptr<MysqlDB::CMysqlDB>              m_pMysqlDB;
         //SQLType_e                       m_sqlType;

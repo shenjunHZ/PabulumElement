@@ -522,6 +522,22 @@ namespace mainApp
         m_pWaitingWidget->StopWaiting();
     }
 
+    bool PrepareTableWidget::isExistInTable(const std::string& strData)
+    {
+        int nRow = m_model->rowCount();
+        for (int iCount = 0; iCount < nRow; iCount++)
+        {
+            QString strTableData = m_model->data(m_model->index(iCount, Recipe_View_Column_MaterialName)).toString();
+            if (0 == strTableData.compare(QString::fromStdString(strData)) )
+            {
+                QString strMsg = QString(QObject::tr("This Recipe has been added to the " "%1" " row of the table!")).arg(iCount + 1);
+                DSGUI::DSMessageNotify::Instance().AddTextNotification(strMsg);
+                return true;
+            }
+        }
+        return false;
+    }
+
     void PrepareTableWidget::addRecipeFromExcel(QList<QList<QVariant>>& listData)
     {
         for (int iDataIndex = 1; iDataIndex < listData.size(); iDataIndex++)
@@ -657,14 +673,14 @@ namespace mainApp
         return true;
     }
 
-    void PrepareTableWidget::onAddRecipe()
+    int PrepareTableWidget::onAddRecipe()
     {
         int iIndex = m_pUi->m_cmbRecipe->currentIndex();
         QString strData = m_pUi->m_cmbRecipe->currentText();
         QString strValue = m_pUi->m_editElement->text();
         if (strValue.isEmpty())
         {
-            return;
+            return -1;
         }
 
         int nRow = m_model->rowCount();
@@ -674,6 +690,12 @@ namespace mainApp
 //             return;
 //         }
         /*****************************/
+        // 已添加的不能重复添加
+        if (isExistInTable(strData.toStdString()))
+        {
+            return -1;
+        }
+
         std::map<QString, QString> mapContain = m_mapContains[strData];
         bool bNeedRefresh = false;
         for each (auto contain in mapContain)
@@ -783,6 +805,8 @@ namespace mainApp
             m_model->insertRow(nRow + 1, tempItem);
             m_model->removeRow(nRow + 1);
         }
+
+        return 0;
     }
 
     void PrepareTableWidget::addHeadListCtrl()
