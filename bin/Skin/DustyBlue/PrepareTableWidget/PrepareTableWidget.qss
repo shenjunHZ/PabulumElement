@@ -17,3 +17,37 @@ QPushButton#btnDel:disabled
 {
 	background:transparent url(skin/DustyBlue/PrepareTableWidget/table_del_dis.png) no-repeat center center;
 }
+
+/*展开按钮*/
+QCheckBox#btnExpand{
+	width:80px;
+	height:20px;
+
+}
+QCheckBox#btnExpand::indicator {
+    image: url(kin/DustyBlue/PrepareTableWidget/ExpandNormal.png);
+}
+QCheckBox#btnExpand::indicator:checked{
+    image: url(skin/DustyBlue/PrepareTableWidget/CollapseNormal.png);
+}
+QCheckBox#btnExpand::indicator:checked:hover {
+    image: url(skin/DustyBlue/PrepareTableWidget/CollapseHover.png);
+}
+QCheckBox#btnExpand::indicator:checked:pressed {
+    image: url(skin/DustyBlue/PrepareTableWidget/CollapsePress.png);
+}
+QCheckBox#btnExpand::indicator:checked:disabled {
+   image: url(skin/DustyBlue/PrepareTableWidget/CollapseDisable.png);
+}
+QCheckBox#btnExpand::indicator:!checked {
+    image: url(skin/DustyBlue/PrepareTableWidget/ExpandNormal.png);
+}
+QCheckBox#btnExpand::indicator:!checked:hover {
+    image: url(skin/DustyBlue/PrepareTableWidget/ExpandHover.png);
+}
+QCheckBox#btnExpand::indicator:!checked:pressed {
+    image: url(skin/DustyBlue/PrepareTableWidget/ExpandHover.png);
+}
+QCheckBox#btnExpand::indicator:!checked:disabled {
+   image: url(skin/DustyBlue/PrepareTableWidget/ExpandDisable.png);
+}

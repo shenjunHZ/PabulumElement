@@ -66,6 +66,7 @@ namespace mainApp
          QValidator *validator = new QRegExpValidator(regx, m_pUi->m_editElement);
          m_pUi->m_editElement->setValidator(validator);
          m_pUi->m_editContent->setValidator(validator);
+         m_pUi->btnExpand->setChecked(false);
  
         // product type
         // 其他类特殊膳食食品（运动营养食品 - 补充蛋白类）
@@ -181,6 +182,7 @@ namespace mainApp
         connect(m_pUi->m_btnClear,         SIGNAL(clicked()),     this, SLOT(onClearList()));
         connect(m_pUi->m_btnRecipeExcel,   SIGNAL(clicked()),     this, SLOT(onInportRecipeExcel()));
         connect(m_pUi->m_editFilterRecipe, SIGNAL(textChanged(const QString &)), this, SLOT(onTextChanged(const QString &)));
+        connect(m_pUi->btnExpand,          SIGNAL(clicked()),     this, SLOT(onExpandClicked()));
     }
 
     void PrepareTableWidget::SetAbbreviationTable(std::shared_ptr<MysqlDB::CMysqlDB> pMysqlDB)
@@ -222,6 +224,18 @@ namespace mainApp
             {
                 m_pUi->m_cmbRecipe->addItem(strRecipe);
             }
+        }
+    }
+
+    void PrepareTableWidget::onExpandClicked()
+    {
+        if (m_pUi->btnExpand->isChecked())
+        {
+            m_pUi->m_pWidgetConfig->hide();
+        }
+        else
+        {
+            m_pUi->m_pWidgetConfig->show();
         }
     }
 
@@ -542,6 +556,11 @@ namespace mainApp
     {
         for (int iDataIndex = 1; iDataIndex < listData.size(); iDataIndex++)
         {
+            if (QObject::tr("total Constituent") == listData[iDataIndex][0].toString())
+            {
+                return;
+            }
+
             int nRow = m_model->rowCount();
             QStandardItem* item = new QStandardItem();
             m_model->insertRow(nRow, item);
@@ -893,17 +912,40 @@ namespace mainApp
        listVar.push_back(listData);
        listData.clear();
 
+       float fTotalConstituent = 0.0; // 总配方
+       float fTotalPrice = 0.0; // 总价
        for (int nRow = 0; nRow < m_model->rowCount(); nRow++)
        {
+           float fConstituent = 0.0;
            for (int nColumn = 1; nColumn < m_model->columnCount() - 1; nColumn++)
            {
                QVariant varData = m_model->data(m_model->index(nRow, nColumn));
                listData.push_back(varData);
+               if (Recipe_View_Column_MaterialCount == nColumn)
+               {
+                   fTotalConstituent += varData.toFloat();
+                   fConstituent = varData.toFloat();
+               }
+               else if (Recipe_View_Column_MaterialPrice == nColumn)
+               {
+                   fTotalPrice += fConstituent / 1000.0 * varData.toFloat();
+               }
            }
            addContainElementValue(listData);
            listVar.push_back(listData);
            listData.clear();
        }
+       // 计算总配方，计价
+       listData.push_back(QObject::tr("total Constituent"));
+       listData.push_back(QObject::tr("total price"));
+       listVar.push_back(listData);
+       listData.clear();
+       QString data = QString("%1").arg(fTotalConstituent);
+       listData.push_back(data);
+       data = QString("%1").arg(fTotalPrice);
+       listData.push_back(data);
+       listVar.push_back(listData);
+       listData.clear();
 
        m_pExcelFile->writeCurrentSheet(listVar);
        m_pExcelFile->closeExecFile();

@@ -66,8 +66,14 @@
        </item>
        <item>
         <widget class="DSGUI::DSPushButton" name="m_btnAllSearch">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string>Search</string>
+         </property>
+         <property name="shortcut">
+          <string notr="true"/>
          </property>
         </widget>
        </item>
